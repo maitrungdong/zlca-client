@@ -1,0 +1,22 @@
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+  overflow: hidden;
+}
+
+body {
+  font-weight: 400;
+  font-size: $default-font-size;
+  line-height: 1.7;
+  color: $black-ter;
+
+  /* box-sizing sets how the total width and height of an element is calculated. */
+  box-sizing: border-box;
+}
