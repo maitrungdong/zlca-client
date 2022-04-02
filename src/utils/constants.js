@@ -8,3 +8,8 @@ export const serverBaseURLs = Object.freeze({
   API: 'http://localhost:8080',
   SOCKET: 'ws://localhost:8888',
 })
+
+export const converEvents = Object.freeze({
+  SEND_MESSAGE: 'send_message',
+  RECEIVE_MESSAGE: 'receive_message',
+})

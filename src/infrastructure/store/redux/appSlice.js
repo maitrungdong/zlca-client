@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk, nanoid } from '@reduxjs/toolkit'
-import appService from '../../api/appService'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import appService from '@api/appService.js'
 
-//Thunks
 const loginUser = createAsyncThunk(
   'app/loginUser',
   async (userData, thunkAPI) => {
@@ -50,7 +49,6 @@ const registerUser = createAsyncThunk(
       //Post userData to server to register... And then get returned data from server to return function
 
       return {
-        id: nanoid(),
         ...userData,
       }
     } catch (err) {
@@ -65,6 +63,7 @@ const registerUser = createAsyncThunk(
 const initialState = {
   isLoggedIn: false,
   userInfo: null,
+
   isLoading: false,
   errMessage: '',
 }

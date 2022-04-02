@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import conversationsService from '../../api/conversationsService.js'
+import conversationsService from '@api/conversationsService.js'
 
-//Thunks
 const fetchAllConversOfUser = createAsyncThunk(
   'conversations/fetchAllConversOfUser',
   async (userId, thunkAPI) => {

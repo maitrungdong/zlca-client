@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import appReducer from './redux/slices/appSlice'
-import conversationsReducer from './redux/slices/conversationsSlice.js'
-import currentConverReducer from './redux/slices/currentConverSlice.js'
+import appReducer from './appSlice'
+import conversationsReducer from './conversationsSlice.js'
+import currentConverReducer from './currentConverSlice.js'
 
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'

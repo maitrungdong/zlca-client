@@ -1,4 +1,4 @@
-import axios from '../../lib/axios.js'
+import axios from '../lib/axios.js'
 
 const appService = {
   loginUser: async (userLoginInfo) => {

@@ -1,20 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { appActions } from '../../app/redux/slices/appSlice'
 import { toast } from 'react-toastify'
 
 import './login.scss'
+import { useLogin } from '@application/services/hooks'
+
+//How to get user loggined to redirect!!!...
 
 const Login = (props) => {
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [password, setPassword] = useState('')
+  const { phoneNumber, password, setPhoneNumber, setPassword, login, error } =
+    useLogin()
 
   const history = useNavigate()
-
-  const dispatch = useDispatch()
-
   const handleInputValueChange = (e) => {
     switch (e.target.name) {
       case 'phoneNumber':
@@ -28,39 +26,19 @@ const Login = (props) => {
     }
   }
 
-  const handleUserLogin = () => {
-    if (phoneNumber === '') {
-      return alert('Phone number must be not empty!')
-    }
-    if (password === '') {
-      return alert('Password must be not empty')
-    }
-    if (!phoneNumber.match(/^\d+$/)) {
-      return alert('Phone number must only contain numbers')
-    }
-
-    dispatch(
-      appActions.loginUser({
-        phoneNumber,
-        password,
+  useEffect(() => {
+    if (error) {
+      toast.error(`${error}`, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
       })
-    )
-      .unwrap()
-      .then((payload) => {
-        history('/')
-      })
-      .catch((payload) => {
-        toast.error(`${payload.errMessage}`, {
-          position: 'top-right',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        })
-      })
-  }
+    }
+  }, [error])
 
   return (
     <div className="login">
@@ -98,10 +76,7 @@ const Login = (props) => {
         </div>
         <div className="field btns">
           <p className="control">
-            <button
-              className="button is-info btn-login"
-              onClick={handleUserLogin}
-            >
+            <button className="button is-info btn-login" onClick={login}>
               Login
             </button>
           </p>
