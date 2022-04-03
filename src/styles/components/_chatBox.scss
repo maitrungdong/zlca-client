@@ -1,0 +1,11 @@
+@import '../abstracts/variables';
+
+.chat-box {
+  height: calc(100vh - $header-height - $footer-height);
+  background-color: $white-ter;
+  padding-bottom: 0.2rem;
+
+  & > div > div:first-child {
+    overflow-x: hidden !important;
+  }
+}

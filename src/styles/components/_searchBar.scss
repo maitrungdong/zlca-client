@@ -1,0 +1,21 @@
+@import '../abstracts/variables';
+
+.search-bar {
+  position: relative;
+  width: 100%;
+  & &-control {
+    font-size: $default-font-size;
+  }
+
+  & &-input {
+    font-size: $default-font-size;
+  }
+
+  .search-result-container {
+    position: absolute;
+    top: calc(100% + 0.4rem);
+    left: 50%;
+    transform: translate(-50%);
+    z-index: 10;
+  }
+}
