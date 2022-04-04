@@ -6,6 +6,7 @@ const fetchAllConversOfUser = createAsyncThunk(
   async (userId, thunkAPI) => {
     try {
       const res = await conversationsService.getAllConversOfUser(userId)
+      console.log({ res })
       if (res.success) {
         return res.data
       } else {

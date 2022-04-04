@@ -1,16 +1,15 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
-import ZaluChat from './pages/zaluChat'
-import Login from './pages/login'
-import Register from './pages/register'
-import RequiredAuth from './components/requiredAuth/RequiredAuth'
+import ZaluChat from './pages/ZaluChat'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import RequiredAuth from './components/RequiredAuth'
 
 import { ToastContainer } from 'react-toastify'
 
 import 'react-toastify/dist/ReactToastify.css'
-
-import './App.scss'
+import NotFound from './components/NotFound'
 
 function App() {
   return (
@@ -36,14 +35,7 @@ function App() {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          path="*"
-          element={
-            <RequiredAuth>
-              <ZaluChat />
-            </RequiredAuth>
-          }
-        />
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       <ToastContainer
