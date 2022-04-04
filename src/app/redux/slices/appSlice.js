@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk, nanoid } from '@reduxjs/toolkit'
-import appService from '../../api/appService'
+import catchError from '../../../utils/catchError'
+import authService from '../../api/authService'
 
 //Thunks
 const loginUser = createAsyncThunk(
   'app/loginUser',
   async (userData, thunkAPI) => {
     try {
-      const res = await appService.loginUser(userData)
+      const res = await authService.loginUser(userData)
       if (res.success) {
         return res.data
       } else {
@@ -14,7 +15,7 @@ const loginUser = createAsyncThunk(
       }
     } catch (err) {
       return thunkAPI.rejectWithValue({
-        errMessage: err.message,
+        errMessage: catchError(err),
       })
     }
   }
@@ -24,7 +25,7 @@ const logoutUser = createAsyncThunk(
   'app/logoutUser',
   async (userId, thunkAPI) => {
     try {
-      const res = await appService.logoutUser(userId)
+      const res = await authService.logoutUser(userId)
       if (res.success) {
         return res.data
       } else {
@@ -32,7 +33,7 @@ const logoutUser = createAsyncThunk(
       }
     } catch (err) {
       return thunkAPI.rejectWithValue({
-        errMessage: err.message,
+        errMessage: catchError(err),
       })
     }
   }
@@ -54,10 +55,9 @@ const registerUser = createAsyncThunk(
         ...userData,
       }
     } catch (err) {
-      console.log(err)
-      return {
-        errMessage: err.message,
-      }
+      return thunkAPI.rejectWithValue({
+        errMessage: catchError(err),
+      })
     }
   }
 )

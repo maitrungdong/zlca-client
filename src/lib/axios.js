@@ -2,15 +2,6 @@ import Axios from 'axios'
 
 const API_URL = 'http://localhost:8080'
 
-function authRequestInterceptor(config) {
-  const token = 'fake)9fdfhkfdhg-asđsfljlZQ-token' //storage.getToken()
-  if (token) {
-    config.headers.authorization = `Brearer ${token}`
-  }
-  config.headers.Accept = 'application/json'
-  return config
-}
-
 const axiosClient = Axios.create({
   baseURL: API_URL,
   headers: {
@@ -23,7 +14,6 @@ axiosClient.interceptors.request.use(
     //Do something before request is sent
     //TODO: Dispatch an action...
     //TODO: Attach JWToken...
-    // config = authRequestInterceptor(config)
     return config
   },
   function (error) {
@@ -38,13 +28,10 @@ axiosClient.interceptors.response.use(
     return response.data
   },
   (error) => {
-    const message =
-      error.response?.data?.message ||
-      error.message ||
-      'Oops! Some errors happened, please try again!'
+    console.log('ERROR: ', error)
     //TODO: Do something with message such as: display notifications...
     //TODO: Dispatch an action...
-    return error.response?.data
+    return Promise.reject(error.response?.data)
   }
 )
 

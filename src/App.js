@@ -9,6 +9,7 @@ import RequiredAuth from './components/RequiredAuth'
 import { ToastContainer } from 'react-toastify'
 
 import 'react-toastify/dist/ReactToastify.css'
+import NotFound from './components/NotFound'
 
 function App() {
   return (
@@ -34,14 +35,7 @@ function App() {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          path="*"
-          element={
-            <RequiredAuth>
-              <ZaluChat />
-            </RequiredAuth>
-          }
-        />
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       <ToastContainer
