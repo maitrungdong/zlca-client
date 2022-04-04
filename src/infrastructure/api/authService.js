@@ -1,9 +1,9 @@
-import axios from '../../lib/axios.js'
+import axiosClient from 'config/axiosClient.js'
 
 const authService = {
   login: async (userInfo) => {
     try {
-      return await axios.post('/api/auth/sign-in', userInfo)
+      return await axiosClient.post('/api/auth/sign-in', userInfo)
     } catch (err) {
       throw err
     }
@@ -11,7 +11,7 @@ const authService = {
 
   logout: async (userId) => {
     try {
-      return await axios.post('/api/auth/sign-out', { userId })
+      return await axiosClient.post('/api/auth/sign-out', { userId })
     } catch (err) {
       throw err
     }

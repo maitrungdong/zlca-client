@@ -1,0 +1,51 @@
+@import '../abstracts/variables';
+
+.login {
+  height: 100vh;
+  position: relative;
+  background: linear-gradient(to bottom, $color-red, $color-info);
+
+  .login-header {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 600;
+
+    margin-bottom: 2rem;
+  }
+
+  .login-container {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 40rem;
+
+    background-color: white;
+    border-radius: 0.4rem;
+
+    padding: 6rem 4rem;
+    border: 0.1rem solid $grey-lighter;
+
+    .login-input {
+      font-size: 1.4rem;
+    }
+  }
+
+  .btn-login-icon {
+    font-size: 1.4rem;
+  }
+
+  .btns {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    padding: 0.8rem;
+  }
+
+  .button.btn-login {
+    font-size: 1.4rem;
+    padding: 0.4rem 1.2rem;
+    width: 8.6rem;
+  }
+}

@@ -1,13 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@presentation/*": ["src/presentation/*"],
-      "@application/*": ["src/application/*"],
-      "@domain/*": ["src/domain/*"],
-      "@infrastructure/*": ["src/infrastructure/*"],
-      "@utils/*": ["src/utils/*"]
-    }
+    "baseUrl": "src"
   },
-  "exclude": ["node_modules"]
+  "include": ["src"]
 }

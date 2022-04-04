@@ -1,16 +1,16 @@
-import axios from '../lib/axios.js'
+import axiosClient from 'config/axiosClient.js'
 
 const conversationsService = {
   getAllConversOfUser: async (userId) => {
     try {
-      return await axios.get(`/api/conversations?userId=${userId}`)
+      return await axiosClient.get(`/api/conversations?userId=${userId}`)
     } catch (err) {
       throw err
     }
   },
   getAllMessages: async (converId) => {
     try {
-      return await axios.get(`/api/messages?converId=${converId}`)
+      return await axiosClient.get(`/api/messages?converId=${converId}`)
     } catch (err) {
       throw err
     }
@@ -18,7 +18,7 @@ const conversationsService = {
 
   saveNewMessageOfMe: async (newMessage) => {
     try {
-      return axios.post(`/api/messages`, newMessage)
+      return axiosClient.post(`/api/messages`, newMessage)
     } catch (err) {
       throw err
     }
