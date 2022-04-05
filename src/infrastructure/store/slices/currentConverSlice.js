@@ -1,16 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import conversationsService from 'infrastructure/api/conversationsService.js'
 
-const fetchAllMessages = createAsyncThunk(
-  'currentConver/fetchAllMessages',
-  async (currentConver, thunkAPI) => {
+const saveNewMessageOfMe = createAsyncThunk(
+  'currentConver/saveNewMessageOfMe',
+  async (newMessage, thunkAPI) => {
     try {
-      const res = await conversationsService.getAllMessages(currentConver.id)
+      const res = await conversationsService.saveNewMessageOfMe(newMessage)
       if (res.success) {
-        return {
-          currentConver,
-          ...res.data,
-        }
+        return res.data
       } else {
         throw new Error(res.message)
       }
@@ -22,13 +19,16 @@ const fetchAllMessages = createAsyncThunk(
   }
 )
 
-const saveNewMessageOfMe = createAsyncThunk(
-  'currentConver/saveNewMessageOfMe',
-  async (newMessage, thunkAPI) => {
+const switchCurrentConver = createAsyncThunk(
+  'currentConver/switchCurrentConver',
+  async (conver, thunkAPI) => {
     try {
-      const res = await conversationsService.saveNewMessageOfMe(newMessage)
+      const res = await conversationsService.getAllMessages(conver.id)
       if (res.success) {
-        return res.data
+        return {
+          currentConver: conver,
+          ...res.data,
+        }
       } else {
         throw new Error(res.message)
       }
@@ -53,23 +53,22 @@ const currentConverSlice = createSlice({
   name: 'currentConver',
   initialState,
   reducers: {
-    setCurrentChatBox(state, action) {},
     saveArrivalMessage(state, action) {
       state.messages.push(action.payload)
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllMessages.pending, (state, action) => {
+      .addCase(switchCurrentConver.pending, (state, action) => {
         state.isLoading = true
       })
-      .addCase(fetchAllMessages.fulfilled, (state, action) => {
+      .addCase(switchCurrentConver.fulfilled, (state, action) => {
+        state.isLoading = false
         state.currentConver = action.payload.currentConver
         state.members = action.payload.currentConver.members
         state.messages = action.payload.messagesOfConver
-        state.isLoading = false
       })
-      .addCase(fetchAllMessages.rejected, (state, action) => {
+      .addCase(switchCurrentConver.rejected, (state, action) => {
         state.isLoading = false
         state.errMessage = action.payload.errMessage
       })
@@ -91,7 +90,7 @@ const currentConverSlice = createSlice({
 })
 
 export const currentConverActions = {
-  fetchAllMessages,
+  switchCurrentConver,
   saveNewMessageOfMe,
   ...currentConverSlice.actions,
 }

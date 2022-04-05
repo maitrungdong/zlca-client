@@ -4,19 +4,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { currentConverActions } from 'infrastructure/store/slices/currentConverSlice.js'
 
 import { messageType } from '../../utils/constants.js'
+import {
+  useUser,
+  useOtherMembers,
+  useSelectCurrentConver,
+} from 'application/services/hooks'
 
 const RightContentFooter = (props) => {
   const dispatch = useDispatch()
-  const currentConver = useSelector(
-    (state) => state.currentConver.currentConver
-  )
-  const me = useSelector((state) => state.app.userInfo)
-  const members = useSelector((state) => state.currentConver.members)
-
-  const [friend, setFriend] = useState(null)
-  useEffect(() => {
-    setFriend(members.find((mem) => mem.id !== me.id))
-  }, [members, me])
+  const currentConver = useSelectCurrentConver()
+  const me = useUser()
+  const friend = useOtherMembers(currentConver)
 
   const [messageTextContent, setMessageTextContent] = useState('')
 

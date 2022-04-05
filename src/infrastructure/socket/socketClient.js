@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client'
-import { serverBaseURLs, socketEvents } from 'utils/constants.js'
+import { serverBaseURLs } from 'utils/constants.js'
 
 let socketClient = null
 

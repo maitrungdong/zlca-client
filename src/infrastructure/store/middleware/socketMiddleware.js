@@ -11,7 +11,6 @@ import {
 
 const socketMiddleware = (initSocketClient) => {
   return (store) => (next) => (action) => {
-    console.log(action)
     if (action.type === 'persist/REHYDRATE' && action.payload?.isLoggedIn) {
       const { userInfo } = action.payload
       let socket = getSocketClient()

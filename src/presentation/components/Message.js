@@ -1,19 +1,19 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+
+import { useUser } from 'application/services/hooks'
 
 import TimeAgo from 'timeago-react'
 import * as timeago from 'timeago.js'
 import vi from 'timeago.js/lib/lang/vi'
 timeago.register('vi', vi)
 
-const Message = React.forwardRef((props, ref) => {
-  const me = useSelector((state) => state.app.userInfo)
-  const currentChat = useSelector((state) => state.conversations.currentChatBox)
+const Message = (props) => {
   const { message } = props
+  const me = useUser()
   const isMe = me.id === message.senderId
 
   return (
-    <div className={`message ${isMe ? 'me' : ''}`} ref={ref}>
+    <div className={`message ${isMe ? 'me' : ''}`}>
       <div
         className="message-sender-avatar"
         style={{ backgroundImage: `url(${message?.sender?.avatar})` }}
@@ -43,7 +43,7 @@ const Message = React.forwardRef((props, ref) => {
       </div>
     </div>
   )
-})
+}
 
 const TextMessage = (props) => {
   const { content } = props

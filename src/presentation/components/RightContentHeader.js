@@ -1,19 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import { useOtherMembers } from 'application/services/hooks'
+import React from 'react'
 import { useSelector } from 'react-redux'
 
 const RightContentHeader = () => {
   const currentConver = useSelector(
     (state) => state.currentConver.currentConver
   )
-  const me = useSelector((state) => state.app.userInfo)
-  const membersOfCurrentConver = useSelector(
-    (state) => state.currentConver.members
-  )
-
-  const [friend, setFriend] = useState()
-  useEffect(() => {
-    setFriend(membersOfCurrentConver.find((mem) => mem.id !== me.id))
-  }, [membersOfCurrentConver, me])
+  const friend = useOtherMembers()
 
   return (
     <div className="right-content-header">

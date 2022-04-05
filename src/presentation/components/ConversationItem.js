@@ -1,52 +1,28 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useState } from 'react'
 import { currentConverActions } from 'infrastructure/store/slices/currentConverSlice.js'
+import { useOtherMembers, useUser } from 'application/services/hooks'
+import { useDispatch } from 'react-redux'
 
 const ConversationItem = (props) => {
   const dispatch = useDispatch()
-  const { conver } = props
-  const currentConver = useSelector(
-    (state) => state.currentConver.currentConver
-  )
-
-  const [isCurrent, setIsCurrent] = useState(false)
-  useEffect(() => {
-    if (currentConver && conver.id === currentConver.id) {
-      setIsCurrent(true)
-    } else {
-      setIsCurrent(false)
-    }
-  }, [currentConver, conver])
+  const { conver, isCurrentConver } = props
+  const friend = useOtherMembers(conver)
 
   const [showMoreTools, setShowMoreTools] = useState(false)
-  const handleShowMoreTools = (action) => {
-    if (action === 'show') setShowMoreTools(true)
-    else {
-      setShowMoreTools(false)
-    }
-  }
-
-  const me = useSelector((state) => state.app.userInfo)
-
-  const [friend, setFriend] = useState(null)
-  useEffect(() => {
-    setFriend(conver.members.find((mem) => mem.id !== me.id))
-  }, [conver.members, me.id])
 
   const handleSwitchCurrentConver = (conver) => {
-    if (!currentConver || conver.id !== currentConver.id) {
-      dispatch(currentConverActions.fetchAllMessages(conver))
-    }
+    if (!isCurrentConver)
+      dispatch(currentConverActions.switchCurrentConver(conver))
   }
 
   return (
     <li
-      className={`conversation-item ${isCurrent ? 'current' : ''}`}
+      className={`conversation-item ${isCurrentConver ? 'current' : ''}`}
       onMouseOver={() => {
-        handleShowMoreTools('show')
+        setShowMoreTools(true)
       }}
       onMouseLeave={() => {
-        handleShowMoreTools('hide')
+        setShowMoreTools(false)
       }}
       onClick={() => handleSwitchCurrentConver(conver)}
     >

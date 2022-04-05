@@ -1,28 +1,21 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 
 import Message from './Message'
 import Scrollbars from 'react-custom-scrollbars-2'
 
-import { useSelector } from 'react-redux'
+import { useSelectMessages } from 'application/services/hooks'
 
 const ChatBox = () => {
-  const scrollEndChat = useRef(null)
-  const messagesOfCurrentConver = useSelector(
-    (state) => state.currentConver.messages
-  )
+  const messages = useSelectMessages()
 
-  useEffect(() => {
-    scrollEndChat.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messagesOfCurrentConver])
+  useEffect(() => {}, [messages])
 
   return (
     <div className="chat-box">
       <Scrollbars>
-        {messagesOfCurrentConver &&
-          messagesOfCurrentConver.length > 0 &&
-          messagesOfCurrentConver.map((m) => {
-            return <Message key={m.id} message={m} ref={scrollEndChat} />
-          })}
+        {messages.map((m) => {
+          return <Message key={m.id} message={m} />
+        })}
       </Scrollbars>
     </div>
   )

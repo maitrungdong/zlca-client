@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { conversationsActions } from 'infrastructure/store/slices/conversationsSlice.js'
 
-import ConversationList from '../components/ConversationList'
+// import ConversationList from '../components/ConversationList'
+import ConversationList from 'demo/ConversationList'
 import NotificationList from '../components/NotificationList'
 import SearchBar from '../components/SearchBar'
 
