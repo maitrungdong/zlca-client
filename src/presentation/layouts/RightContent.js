@@ -1,24 +1,14 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 
-import RightContentHeader from '../components/RightContentHeader'
-import ChatBox from '../components/ChatBox'
-import RightContentFooter from '../components/RightContentFooter'
+import { useCurrentConver } from 'presentation/hooks'
+import CurrentConver from 'presentation/features/conversations/current/CurrentConver.js'
 
-const RightContent = (props) => {
-  const currentConver = useSelector(
-    (state) => state.currentConver.currentConver
-  )
+const RightContent = () => {
+  const currentConver = useCurrentConver()
   return (
     <div className="right-content">
       {currentConver ? (
-        <>
-          <RightContentHeader />
-          <div className="right-content-body">
-            <ChatBox />
-          </div>
-          <RightContentFooter />
-        </>
+        <CurrentConver current={currentConver} />
       ) : (
         'Hãy chọn một cuộc trò chuyện hay có thể tạo mới tại đây'
       )}

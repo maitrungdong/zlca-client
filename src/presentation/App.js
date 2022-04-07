@@ -2,14 +2,14 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import ZaluChat from './pages/ZaluChat'
-import Login from './pages/Login'
+import Login from './pages/login/Login'
 import Register from './pages/Register'
-import RequiredAuth from './components/RequiredAuth'
+import RequiredAuth from './hoc/RequiredAuth'
+import NotFound from './pages/NotFound'
 
 import { ToastContainer } from 'react-toastify'
 
 import 'react-toastify/dist/ReactToastify.css'
-import NotFound from './components/NotFound'
 
 function App() {
   return (

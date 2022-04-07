@@ -38,21 +38,12 @@
     font-weight: 500;
   }
 
-  &__last-msg {
-  }
-
-  &__last-time {
-    position: absolute;
-    top: 1.2rem;
-    right: 1.2rem;
-
-    color: $grey-dark;
-    font-size: 1.2rem;
+  &__sub-desc {
   }
 
   &__more-tools {
     position: absolute;
-    bottom: 1.2rem;
+    top: 1.2rem;
     right: 1.2rem;
 
     color: $grey-dark;

@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { appActions } from 'infrastructure/store/slices/appSlice.js'
 import { useDispatch } from 'react-redux'
 
 const Register = (props) => {
@@ -67,18 +66,18 @@ const Register = (props) => {
       return alert('Mật khẩu phải có độ dài ít nhất 6 kí tự!')
     }
 
-    dispatch(
-      appActions.registerUser({
-        fullName,
-        phoneNumber,
-        avatar,
-        password,
-      })
-    )
-      .unwrap()
-      .then((res) => {
-        history('/login')
-      })
+    // dispatch(
+    //   appActions.registerUser({
+    //     fullName,
+    //     phoneNumber,
+    //     avatar,
+    //     password,
+    //   })
+    // )
+    //   .unwrap()
+    //   .then((res) => {
+    //     history('/login')
+    //   })
   }
 
   return (

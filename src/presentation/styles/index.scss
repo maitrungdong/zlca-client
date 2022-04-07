@@ -8,17 +8,24 @@
 @import 'base/utilities';
 @import 'base/base';
 
-@import 'components/chatBox';
+@import 'components/currentConverHeader';
+@import 'components/currentConver';
+@import 'components/currentConverFooter';
+
 @import 'components/conversationItem';
 @import 'components/conversationList';
+
 @import 'components/message';
+@import 'components/messageList';
+
 @import 'components/navigationMenu';
+
 @import 'components/notificationItem';
 @import 'components/notificationList';
-@import 'components/rightContentFooter';
-@import 'components/rightContentHeader';
+
 @import 'components/searchBar';
 @import 'components/searchItem';
+@import 'components/searchResultList';
 
 @import 'layout/leftContent';
 @import 'layout/rightContent';

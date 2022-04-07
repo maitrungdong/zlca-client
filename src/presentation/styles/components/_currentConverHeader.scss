@@ -1,0 +1,71 @@
+@import '../abstracts/variables';
+
+.current-conver-header {
+  width: 100%;
+  height: $header-height;
+
+  background-color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 1.2rem;
+  border-bottom: $edge-border;
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__avatar {
+    width: 5rem;
+    height: 5rem;
+    background-position: center;
+    background-size: cover;
+
+    border-radius: 50%;
+  }
+
+  &__infos {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__infos-title {
+    font-weight: 500;
+    font-size: 1.8rem;
+  }
+
+  &__infos-last-activity {
+    font-size: 1.2rem;
+  }
+
+  &__tools {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &__tools-item {
+    color: $grey-dark;
+
+    width: 3.2rem;
+    height: 3.2rem;
+
+    font-size: 1.8rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.4rem;
+
+    transition: background-color 0.1s linear;
+
+    &:hover {
+      cursor: pointer;
+      background-color: $grey-lighter;
+    }
+  }
+}

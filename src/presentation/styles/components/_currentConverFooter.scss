@@ -1,0 +1,74 @@
+@import '../abstracts/variables';
+
+.current-conver-footer {
+  width: 100%;
+  height: $footer-height;
+
+  background-color: white;
+  border-top: $edge-border;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+
+  &__toolbar {
+    padding: 0.2rem 1.2rem;
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  &__toolbar-item {
+    font-size: 2rem;
+    color: $grey-dark;
+
+    width: 3.8rem;
+    height: 3.8rem;
+
+    transition: background-color 0.1s linear;
+    border-radius: 0.4rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      cursor: pointer;
+      background-color: $white-ter;
+    }
+  }
+
+  &__input-content {
+    border-top: $edge-border;
+    padding: 0.6rem 1.2rem;
+
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+
+    & .message-text {
+      border: none;
+      resize: none;
+      width: 100%;
+
+      font-size: $default-font-size;
+
+      &:focus,
+      &:active {
+        outline: none;
+      }
+    }
+
+    & .send-message {
+      height: 100%;
+      font-size: 1.4rem;
+
+      padding-left: 0.6rem;
+      padding-right: 0.6rem;
+
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+  }
+}

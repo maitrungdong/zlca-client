@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { conversationsActions } from 'infrastructure/store/slices/conversationsSlice.js'
 
-// import ConversationList from '../components/ConversationList'
-import ConversationList from 'demo/ConversationList'
-import NotificationList from '../components/NotificationList'
-import SearchBar from '../components/SearchBar'
+import ConversationList from '../features/conversations/list/ConversationList'
+// import ConversationList from 'demo/ConversationList'
+import NotificationList from '../features/notifications/NotificationList'
+import SearchBar from '../features/search/SearchBar'
 
 const LeftContent = (props) => {
-  const me = useSelector((state) => state.app.userInfo)
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(conversationsActions.fetchAllConversOfUser(me.id))
-  }, [me.id, dispatch])
-
   const location = useLocation()
   const [currentTab, setCurrentTab] = useState('')
   useEffect(() => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import NavigationMenu from '../components/NavigationMenu'
+import NavigationMenu from '../features/navigationMenu/NavigationMenu'
 
 import LeftContent from '../layouts/LeftContent'
 import RightContent from '../layouts/RightContent'
