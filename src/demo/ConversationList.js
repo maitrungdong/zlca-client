@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react'
 import { generateConversations } from './generateConversations'
 import { List } from 'react-virtualized'
 
-import Scrollbars from 'react-custom-scrollbars-2'
 import { AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized'
 import { Virtuoso } from 'react-virtuoso'
 
@@ -33,8 +32,10 @@ const ConversationList = (props) => {
           <p className="conversation-item__last-msg">
             {conver.lastMessage.slice(0, 100)}
           </p>
+          <p style={{ fontSize: '10px', fontStyle: 'italic' }}>
+            Powered by Virtuoso
+          </p>
         </div>
-
         <i className={`fas fa-ellipsis-h conversation-item__more-tools`}></i>
       </li>
     )
@@ -63,6 +64,9 @@ const ConversationList = (props) => {
             <p className="conversation-item__last-msg">
               {convers[index].lastMessage.slice(0, 100)}
             </p>
+            <p style={{ fontStyle: 'italic', fontSize: '10px' }}>
+              Power by Virtualized
+            </p>
           </div>
 
           <i className={`fas fa-ellipsis-h conversation-item__more-tools`}></i>
@@ -75,14 +79,26 @@ const ConversationList = (props) => {
     <>
       <div
         style={{
-          justifyContent: 'end',
-          padding: '5px',
+          justifyContent: 'space-between',
+          padding: '5px 20px',
           display: 'flex',
-          gap: '10px',
+          backgroundColor: '#209cdd',
         }}
       >
-        <p>Switch to {!isVirtualized ? 'virtualized' : 'virtuoso'}</p>
-        <button onClick={() => setIsVirtualized((prevState) => !prevState)}>
+        <p style={{ fontSize: '20px', fontWeight: '700', color: 'white' }}>
+          Switch to {!isVirtualized ? 'virtualized' : 'virtuoso'}
+        </p>
+        <button
+          style={{
+            color: 'black',
+            padding: '5px 10px',
+            fontSize: 'inherit',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+          }}
+          onClick={() => setIsVirtualized((prevState) => !prevState)}
+        >
           Toggle
         </button>
       </div>
@@ -112,6 +128,7 @@ const ConversationList = (props) => {
             style={{ height: '100%' }}
             data={convers}
             itemContent={renderRowVirtuoso}
+            alignToBottom={true}
           />
         )}
 
