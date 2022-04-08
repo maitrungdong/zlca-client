@@ -1,6 +1,6 @@
 import axiosClient from 'config/axiosClient.js'
 
-const conversationsService = {
+const conversAPIDataSource = {
   getConversOfUser: async (userId) => {
     try {
       return await axiosClient.get(`/api/conversations?userId=${userId}`)
@@ -25,4 +25,4 @@ const conversationsService = {
   },
 }
 
-export default conversationsService
+export default conversAPIDataSource

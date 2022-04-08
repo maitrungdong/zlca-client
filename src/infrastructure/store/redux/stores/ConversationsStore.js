@@ -7,8 +7,16 @@ class ConversStore {
       callback(reduxStore.getState().conversations)
     })
   }
-  getConversOfUser(userId) {
-    reduxStore.dispatch(conversActions.getConversOfUser(userId))
+  getConversOfUserPending() {
+    reduxStore.dispatch(conversActions.getConversOfUserPending())
+  }
+  getConversOfUserFulfilled(conversations) {
+    reduxStore.dispatch(
+      conversActions.getConversOfUserFulFilled({ conversations })
+    )
+  }
+  getConversOfUserRejected() {
+    reduxStore.dispatch(conversActions.getConversOfUserRejected())
   }
 }
 

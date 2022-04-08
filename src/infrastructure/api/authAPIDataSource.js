@@ -1,6 +1,6 @@
 import axiosClient from 'config/axiosClient.js'
 
-const authService = {
+const authAPIDataSource = {
   login: async (userInfo) => {
     try {
       return await axiosClient.post('/api/auth/sign-in', userInfo)
@@ -26,4 +26,4 @@ const authService = {
   },
 }
 
-export default authService
+export default authAPIDataSource

@@ -21,9 +21,10 @@ const socketMiddleware = (initSocketClient) => {
           store.dispatch(currentConverActions.saveArrivalMessage(data.message))
         })
       }
-    } else if (action.type === 'currentConver/saveNewMessage/fulfilled') {
+    } else if (action.type === 'currentConver/saveNewMessageFulfilled') {
       const me = store.getState().auth.userInfo
       const members = store.getState().currentConver.members
+      console.log({ action })
 
       const socket = getSocketClient()
 
@@ -31,7 +32,7 @@ const socketMiddleware = (initSocketClient) => {
         socket.emit(socketEvents.SEND_MESSAGE, {
           senderId: me.id,
           receiverId: members.find((mem) => mem.id !== me.id).id,
-          message: action.payload,
+          message: action.payload.newMessage,
         })
       } catch (err) {
         console.log(err)

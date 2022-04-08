@@ -1,27 +1,32 @@
 import { reduxStore } from '../reduxStore.js'
 import { authActions } from '../slices/authSlice.js'
 
-/**
- * From MTD: Ở bên ngoài khi sử dụng sẽ tuân thủ interface này
- * của authStore.
- * Giả sử: Ta không dùng redux, mà dùng một state
- * management tool khác thì chỉ cần tuân thủ interface
- * này là được.
- */
 class AuthStore {
   subscribeToAuthState(callback) {
     reduxStore.subscribe(() => {
       callback(reduxStore.getState().auth)
     })
   }
-  login(userInfo) {
-    reduxStore.dispatch(authActions.login(userInfo))
+  loginPending() {
+    reduxStore.dispatch(authActions.loginPending())
   }
-  logout(userId) {
-    reduxStore.dispatch(authActions.logout(userId))
+  loginFulfilled(userInfo) {
+    reduxStore.dispatch(authActions.loginFulfilled({ userInfo }))
   }
-  register(userInfo) {
-    reduxStore.dispatch(authActions.register(userInfo))
+  loginRejected(errMessage) {
+    reduxStore.dispatch(authActions.loginRejected({ errMessage }))
+  }
+  logoutFulfilled() {
+    reduxStore.dispatch(authActions.logoutFulfilled())
+  }
+  registerPending() {
+    reduxStore.dispatch(authActions.registerPending())
+  }
+  registerFulfilled(userInfo) {
+    reduxStore.dispatch(authActions.registerFulfilled({ userInfo }))
+  }
+  registerRejected(errMessage) {
+    reduxStore.dispatch(authActions.registerRejected({ errMessage }))
   }
 }
 

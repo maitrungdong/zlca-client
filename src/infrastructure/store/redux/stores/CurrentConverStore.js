@@ -8,13 +8,38 @@ class CurrentConverStore {
     })
   }
 
-  saveNewMessage(newMessage) {
-    reduxStore.dispatch(currentConverActions.saveNewMessage(newMessage))
+  saveNewMessagePending() {
+    reduxStore.dispatch(currentConverActions.saveNewMessagePending())
   }
 
-  switchCurrentConver(newCurrentConver) {
+  saveNewMessageFulfilled(newMessage) {
     reduxStore.dispatch(
-      currentConverActions.switchCurrentConver(newCurrentConver)
+      currentConverActions.saveNewMessageFulfilled({ newMessage })
+    )
+  }
+
+  saveNewMessageRejected(errMessage) {
+    reduxStore.dispatch(
+      currentConverActions.saveNewMessageRejected({ errMessage })
+    )
+  }
+
+  switchCurrentConverPending() {
+    reduxStore.dispatch(currentConverActions.switchCurrentConverPending())
+  }
+
+  switchCurrentConverFulfilled(newCurrentConver) {
+    reduxStore.dispatch(
+      currentConverActions.switchCurrentConverFulfilled({
+        currentConver: newCurrentConver.current,
+        messagesOfConver: newCurrentConver.messagesOfConver,
+      })
+    )
+  }
+
+  switchCurrentConverRejected(errMessage) {
+    reduxStore.dispatch(
+      currentConverActions.switchCurrentConverRejected({ errMessage })
     )
   }
 
