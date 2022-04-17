@@ -8,7 +8,7 @@ const RightContent = () => {
   return (
     <div className="right-content">
       {currentConver ? (
-        <CurrentConver current={currentConver} />
+        <CurrentConver />
       ) : (
         'Hãy chọn một cuộc trò chuyện hay có thể tạo mới tại đây'
       )}

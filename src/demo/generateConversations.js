@@ -1,4 +1,6 @@
-import img4k from './img-4k.jpg'
+// import img4k from './img-4k.jpg'
+import img500kb from './img-500kb.png'
+
 import { LoremIpsum } from 'lorem-ipsum'
 import { nanoid } from '@reduxjs/toolkit'
 
@@ -20,7 +22,7 @@ export const generateConversations = (num) => {
       id: nanoid(),
       title: lorem.generateWords(3),
       lastMessage: lorem.generateSentences(6),
-      avatar: img4k,
+      avatar: img500kb,
     })
   }
 

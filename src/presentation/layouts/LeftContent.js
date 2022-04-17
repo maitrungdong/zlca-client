@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import ConversationList from '../features/conversations/list/ConversationList'
-// import ConversationList from 'demo/ConversationList'
 import NotificationList from '../features/notifications/NotificationList'
 import SearchBar from '../features/search/SearchBar'
 
