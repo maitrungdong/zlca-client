@@ -1,4 +1,5 @@
-import conversAPIDataSource from 'infrastructure/api/conversAPIDataSource'
+import messagesAPIDataSource from 'infrastructure/api/messagesAPIDataSource'
+
 import currentConverStore from 'infrastructure/store/redux/stores/CurrentConverStore'
 import catchError from 'utils/catchError'
 
@@ -6,7 +7,7 @@ class CurrentConverRepository {
   async saveNewMessage(newMessage) {
     try {
       currentConverStore.saveNewMessagePending()
-      const res = await conversAPIDataSource.saveNewMessage(newMessage)
+      const res = await messagesAPIDataSource.saveNewMessage(newMessage)
       if (res.success) {
         currentConverStore.saveNewMessageFulfilled(res.data)
       } else {
@@ -21,7 +22,9 @@ class CurrentConverRepository {
   async switchCurrentConver(newCurrentConver) {
     try {
       currentConverStore.switchCurrentConverPending()
-      const res = await conversAPIDataSource.getMessages(newCurrentConver.id)
+      const res = await messagesAPIDataSource.getMessagesOfConver(
+        newCurrentConver.id
+      )
       if (res.success) {
         currentConverStore.switchCurrentConverFulfilled({
           current: newCurrentConver,
