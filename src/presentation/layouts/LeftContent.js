@@ -20,7 +20,6 @@ const LeftContent = (props) => {
     <div className="left-content">
       <div className="left-content-header">
         <SearchBar />
-        <i className="fas fa-user-plus left-content-header__icon"></i>
       </div>
       <div className="tabs is-large">
         <ul>
