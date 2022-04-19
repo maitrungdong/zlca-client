@@ -1,18 +1,16 @@
-import SaveNewMessage from 'domain/usecases/CurrentConver/SaveNewMessage'
-import currentConverRepository from 'infrastructure/repositories/CurrentConverRepository'
+import SaveNewMessage from 'domain/usecases/Messages/SaveNewMessage'
+import messagesRepository from 'infrastructure/repositories/MessagesRepository'
 
 import {
   useMe,
   useCurrentConver,
   useOtherMembersOfCU,
-  useMessagesOfCU,
 } from 'presentation/hooks'
 
 import { messageType } from 'utils/constants'
 
-const CurrentConverViewModel = () => {
+const CurrentConverVM = () => {
   const friend = useOtherMembersOfCU()
-  const messages = useMessagesOfCU()
   const me = useMe()
 
   const c = useCurrentConver()
@@ -31,16 +29,16 @@ const CurrentConverViewModel = () => {
       ? 'Đang online'
       : friend?.lastOnline
 
-    if (messages && messages.length > 0) {
-      currentConver.messages = messages.map((m) => {
-        return {
-          ...m,
-          isMe: m.senderId === me.id,
-        }
-      })
-    } else {
-      currentConver.messages = []
-    }
+    // if (messages && messages.length > 0) {
+    //   currentConver.messages = messages.map((m) => {
+    //     return {
+    //       ...m,
+    //       isMe: m.senderId === me.id,
+    //     }
+    //   })
+    // } else {
+    //   currentConver.messages = []
+    // }
   }
 
   const sendMessage = async (msgTextContent) => {
@@ -52,7 +50,7 @@ const CurrentConverViewModel = () => {
         textContent: msgTextContent.trim(),
       }
 
-      const uc = new SaveNewMessage(currentConverRepository)
+      const uc = new SaveNewMessage(messagesRepository)
       await uc.invoke(newMessage)
     }
   }
@@ -63,4 +61,4 @@ const CurrentConverViewModel = () => {
   }
 }
 
-export default CurrentConverViewModel
+export default CurrentConverVM

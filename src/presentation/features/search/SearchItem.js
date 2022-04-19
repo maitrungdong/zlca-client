@@ -1,7 +1,12 @@
 import React from 'react'
 
-const searchItem = () => {
-  return <div className="search-item">searchItem</div>
+const searchItem = (props) => {
+  const { searchResult } = props
+  return (
+    <div className="search-item">
+      {searchResult.fullName} <br /> {searchResult.phoneNumber}
+    </div>
+  )
 }
 
 export default searchItem

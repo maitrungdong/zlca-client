@@ -35,7 +35,7 @@ class MessagesStore {
    * có hoặc không có data?
    * Còn việc pending hay có xuất hiện lỗi trong quá trình get/update.
    * Nó đã là một chuyện khác! Bởi vì, không phải một lệnh get/update nào ta cũng cần phải
-   * listen việc loading or thông báo lỗi...
+   * listen việc loading or thông báo lỗi (BÊN UI)...
    * Ngoài ra, nó còn không giúp cho code của chúng ta DRY(Don't repeat yourself)!!!
    * Vì thế, sẽ cần có một slice, hay store khác để quản lý việc loading và thông báo lỗi!
    * Bên trong repository (nơi trung tâm của các hoạt động liên quan đến data) sẽ
@@ -44,10 +44,10 @@ class MessagesStore {
    * mới quyết định dispatch action đó (action lỗi).
    * => Chúng ta sẽ cần phải có một solution khác ở đây.
    * */
-  getMessagesOfConverPending() {
+  getMessagesOfConverLoading() {
     reduxStore.dispatch(messagesActions.getMessagesOfConverPending())
   }
-  getMessagesOfConverFulfilled(converId, messages) {
+  saveMessagesOfConverToStore({ converId, messages }) {
     reduxStore.dispatch(
       messagesActions.getMessagesOfConverFulfilled({
         converId,
@@ -55,10 +55,33 @@ class MessagesStore {
       })
     )
   }
-  getMessagesOfConverRejected(errMessage) {
+  getMessagesOfConverFailed(errMessage) {
     reduxStore.dispatch(
       messagesActions.getMessagesOfConverRejected({ errMessage })
     )
+  }
+
+  getMessagesOfConverFromStore(converId) {
+    return reduxStore
+      .getState()
+      .messages.messagesOfConvers.find((m) => m.converId === converId)
+  }
+
+  saveNewMessageLoading() {
+    reduxStore.dispatch(messagesActions.saveNewMessagePending())
+  }
+  saveNewMessageSuccess(newMessage) {
+    reduxStore.dispatch(
+      messagesActions.saveMessageFulfilled({
+        newMessage: newMessage,
+      })
+    )
+  }
+  saveNewMessageFailed(errMessage) {
+    reduxStore.dispatch(messagesActions.saveNewMessageRejected({ errMessage }))
+  }
+  saveArrivalMessage(arrivalMessage) {
+    reduxStore.dispatch(messagesActions.saveArrivalMessage({ arrivalMessage }))
   }
 }
 

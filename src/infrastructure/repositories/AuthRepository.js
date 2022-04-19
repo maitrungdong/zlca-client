@@ -5,23 +5,24 @@ import catchError from 'utils/catchError.js'
 class AuthRepository {
   async login(userInfo) {
     try {
-      authStore.loginPending()
+      authStore.loginLoading()
+
       const res = await authAPIDataSource.login(userInfo)
       if (res.success) {
-        authStore.loginFulfilled(res.data)
+        authStore.loginSuccess(res.data)
       } else {
         throw new Error(res.message)
       }
     } catch (err) {
       const errMessage = catchError(err)
-      authStore.loginRejected(errMessage)
+      authStore.loginFailed(errMessage)
     }
   }
   async logout(userId) {
     try {
       const res = await authAPIDataSource.logout(userId)
       if (res.success) {
-        authStore.logoutFulfilled()
+        authStore.logoutSuccess()
       } else {
         throw new Error(res.message)
       }
@@ -32,16 +33,16 @@ class AuthRepository {
 
   async register(userInfo) {
     try {
-      authStore.registerPending()
+      authStore.registerLoading()
       const res = await authAPIDataSource.register(userInfo)
       if (res.success) {
-        authStore.registerFulfilled(res.data)
+        authStore.registerSuccess(res.data)
       } else {
         throw new Error(res.message)
       }
     } catch (err) {
       const errMessage = catchError(err)
-      authStore.registerRejected(errMessage)
+      authStore.registerFailed(errMessage)
     }
   }
 }

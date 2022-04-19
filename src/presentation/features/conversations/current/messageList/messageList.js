@@ -1,9 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import Message from './Message'
 import Scrollbars from 'react-custom-scrollbars-2'
 
-const MessageList = ({ messages }) => {
+import useMessageListVM from './MessageListVM'
+
+const MessageList = () => {
+  const { messages, getMessages } = useMessageListVM()
+
+  useEffect(() => {
+    if (messages.length <= 0) {
+      getMessages()
+    }
+  }, [])
+
   return (
     <div className="message-list">
       <Scrollbars>
