@@ -5,6 +5,7 @@ class GetConversOfUser {
   }
 
   async invoke(userId) {
+    console.log({ userId })
     await this._conversRepo.getConversOfUser(userId)
   }
 }

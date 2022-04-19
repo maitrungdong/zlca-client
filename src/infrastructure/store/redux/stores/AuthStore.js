@@ -7,25 +7,28 @@ class AuthStore {
       callback(reduxStore.getState().auth)
     })
   }
-  loginPending() {
+
+  loginLoading() {
     reduxStore.dispatch(authActions.loginPending())
   }
-  loginFulfilled(userInfo) {
+  loginSuccess(userInfo) {
     reduxStore.dispatch(authActions.loginFulfilled({ userInfo }))
   }
-  loginRejected(errMessage) {
+  loginFailed(errMessage) {
     reduxStore.dispatch(authActions.loginRejected({ errMessage }))
   }
-  logoutFulfilled() {
+
+  logoutSuccess() {
     reduxStore.dispatch(authActions.logoutFulfilled())
   }
-  registerPending() {
+
+  registerLoading() {
     reduxStore.dispatch(authActions.registerPending())
   }
-  registerFulfilled(userInfo) {
+  registerSuccess(userInfo) {
     reduxStore.dispatch(authActions.registerFulfilled({ userInfo }))
   }
-  registerRejected(errMessage) {
+  registerFailed(errMessage) {
     reduxStore.dispatch(authActions.registerRejected({ errMessage }))
   }
 }

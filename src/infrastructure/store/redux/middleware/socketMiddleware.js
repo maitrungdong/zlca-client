@@ -1,11 +1,10 @@
 import { socketEvents } from 'utils/constants.js'
-// import { currentConverActions } from '../slices/currentConverSlice.js'
-import currentConverRepository from 'infrastructure/repositories/CurrentConverRepository.js'
 
 import {
   initSocketClient,
   getSocketClient,
 } from 'infrastructure/socket/socketClient.js'
+import messagesStore from '../stores/MessagesStore'
 
 /** [ISSUES]: Socket nên một module riêng, chúng ta nên tạo kết nối, hay listen
  * events ở một chỗ khác! Không nên bỏ ở đây.
@@ -30,8 +29,11 @@ const socketMiddleware = (initSocketClient) => {
 
         //Add event listeners
         socket.on(socketEvents.GET_MESSAGE, (data) => {
-          // store.dispatch(currentConverActions.saveArrivalMessage(data.message))
-          currentConverRepository.saveArrivalMessage(data.message)
+          //[Note]: Chúng ta không dùng messagesRepo ở đây, bởi vì messagesRepo nó
+          // làm nhiều thứ hơn, ví dụ: save xuống DB chẳng hạn. Mà như vậy thì, ko cần
+          // thiết. Trong khi đó, thằng socket này nó cũng đứng trong tầng với store nên
+          // maybe điều này được phép.
+          messagesStore.saveArrivalMessage(data.message)
         })
       }
     } else if (action.type === 'currentConver/saveNewMessageFulfilled') {

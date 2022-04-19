@@ -1,7 +1,7 @@
 import { useMe, useCurrentConver, useConversOfCU } from 'presentation/hooks'
 
-import SwitchCurrentConver from 'domain/usecases/CurrentConver/SwitchCurrentConver'
-import currentConverRepository from 'infrastructure/repositories/CurrentConverRepository'
+import SwitchCurrentConver from 'domain/usecases/Convers/SwitchCurrentConver'
+
 import GetConversOfUser from 'domain/usecases/Convers/GetConversOfUser'
 import conversRepository from 'infrastructure/repositories/ConversRepository'
 
@@ -40,7 +40,7 @@ export default function ConversationListVM() {
 
   const switchCurrentConver = async (conver) => {
     if (!conver.isCurrentConver) {
-      const uc = new SwitchCurrentConver(currentConverRepository)
+      const uc = new SwitchCurrentConver(conversRepository)
       await uc.invoke(conver)
     }
   }
