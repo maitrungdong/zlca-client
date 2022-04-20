@@ -1,20 +1,22 @@
-import conversStore from 'infrastructure/store/redux/stores/ConversationsStore.js'
 import conversAPIDataSource from 'infrastructure/api/conversAPIDataSource.js'
-import catchError from 'utils/catchError'
 
 class ConversRepository {
   async getConversOfUser(userId) {
     try {
-      conversStore.getConversOfUserPending()
+      //Lấy các conversation từ trong cache nếu có,
+      //Không có thì chọc vào DB,
+      //Không có nữa thì lấy trên server.
       const res = await conversAPIDataSource.getConversOfUser(userId)
-      if (res.success) {
-        conversStore.getConversOfUserFulfilled(res.data.conversations)
-      } else {
-        throw new Error(res.message)
-      }
+      return res.conversations
     } catch (err) {
-      const errMessage = catchError(err)
-      conversStore.getConversOfUserRejected(errMessage)
+      throw err
+    }
+  }
+  async getConverById(converId) {
+    try {
+      return await conversAPIDataSource.getConverById(converId)
+    } catch (err) {
+      throw err
     }
   }
 }

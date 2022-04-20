@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom'
 
 import { toast } from 'react-toastify'
 
-import useViewModel from './loginVM'
+import useLoginVM from './loginVM.js'
 
 const Login = (props) => {
   const { phoneNumber, setPhoneNumber, password, setPassword, error, login } =
-    useViewModel()
+    useLoginVM()
 
   const history = useNavigate()
 

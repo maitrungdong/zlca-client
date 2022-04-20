@@ -7,6 +7,7 @@ import SearchBar from '../features/search/SearchBar'
 
 const LeftContent = (props) => {
   const location = useLocation()
+
   const [currentTab, setCurrentTab] = useState('')
   useEffect(() => {
     if (location.hash === '#notifications') {
@@ -20,7 +21,6 @@ const LeftContent = (props) => {
     <div className="left-content">
       <div className="left-content-header">
         <SearchBar />
-        <i className="fas fa-user-plus left-content-header__icon"></i>
       </div>
       <div className="tabs is-large">
         <ul>

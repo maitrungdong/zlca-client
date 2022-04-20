@@ -5,7 +5,11 @@ class GetConversOfUser {
   }
 
   async invoke(userId) {
-    await this._conversRepo.getConversOfUser(userId)
+    try {
+      return await this._conversRepo.getConversOfUser(userId)
+    } catch (err) {
+      throw err
+    }
   }
 }
 

@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 
 import { useMe } from 'presentation/hooks'
-import useViewModel from './navigationMenuVM'
+import useNavMenuVM from './navigationMenuVM'
 
 const NavigationMenu = () => {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const me = useMe()
-  const { logout } = useViewModel()
+  const { logout } = useNavMenuVM()
 
   return (
     <ul className="nav-menu">

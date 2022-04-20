@@ -5,7 +5,11 @@ class Logout {
   }
 
   async invoke(userId) {
-    await this._authRepo.logout(userId)
+    try {
+      return await this._authRepo.logout(userId)
+    } catch (err) {
+      throw err
+    }
   }
 }
 

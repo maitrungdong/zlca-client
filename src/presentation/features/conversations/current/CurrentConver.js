@@ -1,12 +1,12 @@
 import React from 'react'
 
 import CurrentConverHeader from './components/CurrentConverHeader'
-import MessageList from 'presentation/features/conversations/current/messageList/messageList'
+import MessageList from 'presentation/features/conversations/current/messageList/MessageList'
 import CurrentConverFooter from './components/CurrentConverFooter'
-import useViewModel from './currentConverVM.js'
+import useCurrentConverVM from './CurrentConverVM.js'
 
 const CurrentConver = () => {
-  const { currentConver, sendMessage } = useViewModel()
+  const { currentConver, sendMessage } = useCurrentConverVM()
   return (
     <div className="current-conver">
       <CurrentConverHeader
@@ -15,7 +15,7 @@ const CurrentConver = () => {
         lastActivity={currentConver.lastActivity}
       />
       <div className="current-conver-body">
-        <MessageList messages={currentConver.messages} />
+        <MessageList />
       </div>
       <CurrentConverFooter sendMessage={sendMessage} />
     </div>

@@ -1,9 +1,10 @@
 import axiosClient from 'config/axiosClient.js'
 
-const conversAPIDataSource = {
-  getConversOfUser: async (userId) => {
+const messagesAPIDataSource = {
+  getMessagesOfConver: async (converId) => {
     try {
-      const res = await axiosClient.get(`/api/conversations?userId=${userId}`)
+      const res = await axiosClient.get(`/api/messages?converId=${converId}`)
+
       if (res.success) {
         return res.data
       } else {
@@ -13,9 +14,11 @@ const conversAPIDataSource = {
       throw err
     }
   },
-  getConverById: async (converId) => {
+
+  saveNewMessage: async (newMessage) => {
     try {
-      const res = await axiosClient.get(`/api/conversations/${converId}`)
+      const res = await axiosClient.post(`/api/messages`, newMessage)
+
       if (res.success) {
         return res.data
       } else {
@@ -27,4 +30,4 @@ const conversAPIDataSource = {
   },
 }
 
-export default conversAPIDataSource
+export default messagesAPIDataSource

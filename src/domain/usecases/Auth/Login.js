@@ -5,7 +5,11 @@ class Login {
   }
 
   async invoke(userInfo) {
-    await this._authRepo.login(userInfo)
+    try {
+      return await this._authRepo.login(userInfo)
+    } catch (err) {
+      throw err
+    }
   }
 }
 

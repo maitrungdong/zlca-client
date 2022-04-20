@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { reduxStore } from 'infrastructure/store/redux/reduxStore'
+import { reduxStore } from 'domain/stores/redux/reduxStore'
 
 const refEquality = (a, b) => a === b
 

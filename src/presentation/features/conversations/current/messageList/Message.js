@@ -10,7 +10,7 @@ const Message = ({ message }) => {
     <div className={`message ${message.isMe ? 'me' : ''}`}>
       <div
         className="message-sender-avatar"
-        style={{ backgroundImage: `url(${message?.sender?.avatar})` }}
+        style={{ backgroundImage: `url(${message.senderAvatar})` }}
       ></div>
       <div className="message-content">
         {/* //messageType của nó là gì. Nếu là images thì ta sẽ
