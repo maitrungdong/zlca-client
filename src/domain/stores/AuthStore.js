@@ -1,5 +1,5 @@
-import { reduxStore } from '../reduxStore.js'
-import { authActions } from '../slices/authSlice.js'
+import { reduxStore } from './redux/reduxStore.js'
+import { authActions } from './redux/slices/authSlice.js'
 
 class AuthStore {
   subscribeToAuthState(callback) {
@@ -30,6 +30,10 @@ class AuthStore {
   }
   registerFailed(errMessage) {
     reduxStore.dispatch(authActions.registerRejected({ errMessage }))
+  }
+
+  getMe() {
+    return reduxStore.getState().auth.userInfo
   }
 }
 

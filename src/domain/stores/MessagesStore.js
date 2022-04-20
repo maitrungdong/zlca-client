@@ -1,5 +1,5 @@
-import { reduxStore } from '../reduxStore.js'
-import { messagesActions } from '../slices/messagesSlice.js'
+import { reduxStore } from './redux/reduxStore.js'
+import { messagesActions } from './redux/slices/messagesSlice.js'
 
 /**
  * STORE: là một interface chung cho các state management tool.
@@ -47,10 +47,9 @@ class MessagesStore {
   getMessagesOfConverLoading() {
     reduxStore.dispatch(messagesActions.getMessagesOfConverPending())
   }
-  saveMessagesOfConverToStore({ converId, messages }) {
+  saveMessagesOfConverToStore(messages) {
     reduxStore.dispatch(
       messagesActions.getMessagesOfConverFulfilled({
-        converId,
         messages,
       })
     )
@@ -61,25 +60,20 @@ class MessagesStore {
     )
   }
 
-  getMessagesOfConverFromStore(converId) {
-    return reduxStore
-      .getState()
-      .messages.messagesOfConvers.find((m) => m.converId === converId)
-  }
-
   saveNewMessageLoading() {
     reduxStore.dispatch(messagesActions.saveNewMessagePending())
   }
   saveNewMessageSuccess(newMessage) {
     reduxStore.dispatch(
       messagesActions.saveMessageFulfilled({
-        newMessage: newMessage,
+        newMessage,
       })
     )
   }
   saveNewMessageFailed(errMessage) {
     reduxStore.dispatch(messagesActions.saveNewMessageRejected({ errMessage }))
   }
+
   saveArrivalMessage(arrivalMessage) {
     reduxStore.dispatch(messagesActions.saveArrivalMessage({ arrivalMessage }))
   }

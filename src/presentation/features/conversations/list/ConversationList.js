@@ -3,10 +3,11 @@ import React, { useEffect } from 'react'
 import Scrollbars from 'react-custom-scrollbars-2'
 
 import ConversationItem from './ConversationItem'
-import useViewModel from './ConversationListVM'
+
+import useConverListVM from './ConversationListVM.js'
 
 const ConversationList = () => {
-  const { convers, getConversOfCU, switchCurrentConver } = useViewModel()
+  const { convers, getConversOfCU, switchCurrentConver } = useConverListVM()
 
   useEffect(() => {
     getConversOfCU()

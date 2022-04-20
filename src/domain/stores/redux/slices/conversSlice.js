@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   convers: [],
-  current: null,
+  currentId: null,
 
   isLoading: false,
   errMessage: null,
@@ -14,9 +14,11 @@ const conversSlice = createSlice({
   reducers: {
     getConversOfUserPending(state, action) {
       state.isLoading = true
+      state.errMessage = null
     },
     getConversOfUserFulFilled(state, action) {
       state.convers = action.payload.conversations
+
       state.isLoading = false
     },
     getConversOfUserRejected(state, action) {
@@ -25,15 +27,24 @@ const conversSlice = createSlice({
     },
     switchCurrConverPending(state, action) {
       state.isLoading = true
+      state.errMessage = null
     },
     switchCurrConverFulfilled(state, action) {
-      console.log({ switchCurrConverFulfilled: action.payload.currentConver })
+      state.currentId = action.payload.converId
+      state.convers = action.payload.newConvers
+
       state.isLoading = false
-      state.current = action.payload.currentConver
     },
     switchCurrConverRejected(state, action) {
       state.isLoading = false
       state.errMessage = action.payload.errMessage
+    },
+    updateConver(state, action) {
+      const { conver } = action.payload
+      state.convers = state.convers.map((c) => {
+        if (c.id === conver.id) return conver
+        else return c
+      })
     },
   },
 })

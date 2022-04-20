@@ -1,10 +1,12 @@
 import { socketEvents } from 'utils/constants.js'
 
+import conversStore from 'domain/stores/ConversationsStore.js'
+import messagesManager from 'domain/managers/MessagesManager'
+
 import {
   initSocketClient,
   getSocketClient,
 } from 'infrastructure/socket/socketClient.js'
-import messagesStore from '../stores/MessagesStore'
 
 /** [ISSUES]: Socket nên một module riêng, chúng ta nên tạo kết nối, hay listen
  * events ở một chỗ khác! Không nên bỏ ở đây.
@@ -21,6 +23,7 @@ const socketMiddleware = (initSocketClient) => {
   return (store) => (next) => (action) => {
     if (action.type === 'persist/REHYDRATE' && action.payload?.isLoggedIn) {
       const { userInfo } = action.payload
+
       let socket = getSocketClient()
       if (socket === null) {
         initSocketClient()
@@ -29,21 +32,18 @@ const socketMiddleware = (initSocketClient) => {
 
         //Add event listeners
         socket.on(socketEvents.GET_MESSAGE, (data) => {
-          //[Note]: Chúng ta không dùng messagesRepo ở đây, bởi vì messagesRepo nó
-          // làm nhiều thứ hơn, ví dụ: save xuống DB chẳng hạn. Mà như vậy thì, ko cần
-          // thiết. Trong khi đó, thằng socket này nó cũng đứng trong tầng với store nên
-          // maybe điều này được phép.
-          messagesStore.saveArrivalMessage(data.message)
+          messagesManager.saveArrivalMessage(data.message)
         })
       }
-    } else if (action.type === 'currentConver/saveNewMessageFulfilled') {
+    } else if (action.type === 'messages/saveMessageFulfilled') {
       const me = store.getState().auth.userInfo
-      const members = store.getState().currentConver.members
-      console.log({ action })
+      const currentConver = conversStore.getCurrentConver()
+      const members = currentConver.members
 
       const socket = getSocketClient()
 
       try {
+        //Thiếu cái conversation nhận là gì?
         socket.emit(socketEvents.SEND_MESSAGE, {
           senderId: me.id,
           receiverId: members.find((mem) => mem.id !== me.id).id,

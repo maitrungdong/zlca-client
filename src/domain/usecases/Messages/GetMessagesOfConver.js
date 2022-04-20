@@ -5,7 +5,11 @@ class GetMessagesOfConver {
   }
 
   async invoke(converId) {
-    await this._messagesRepo.getMessagesOfConver(converId)
+    try {
+      return await this._messagesRepo.getMessagesOfConver(converId)
+    } catch (err) {
+      throw err
+    }
   }
 }
 

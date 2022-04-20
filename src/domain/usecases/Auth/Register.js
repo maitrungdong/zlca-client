@@ -5,7 +5,11 @@ class Register {
   }
 
   async invoke(userInfo) {
-    await this._authRepo.register(userInfo)
+    try {
+      return await this._authRepo.register(userInfo)
+    } catch (err) {
+      throw err
+    }
   }
 }
 

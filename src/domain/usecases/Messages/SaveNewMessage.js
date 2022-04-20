@@ -4,7 +4,11 @@ class SaveNewMessage {
     this._messagesRepo = messagesRepo
   }
   async invoke(newMessage) {
-    await this._messagesRepo.saveNewMessage(newMessage)
+    try {
+      return await this._messagesRepo.saveNewMessage(newMessage)
+    } catch (err) {
+      throw err
+    }
   }
 }
 

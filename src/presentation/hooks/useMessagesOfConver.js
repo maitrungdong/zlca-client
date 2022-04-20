@@ -1,13 +1,7 @@
 import { useCustomSelector } from './useCustomSelector'
 
-const useMessagesOfConver = (converId) => {
-  return (
-    useCustomSelector((state) => {
-      return state.messages.messagesOfConvers.find(
-        (m) => m.converId === converId
-      )?.messages
-    }) || []
-  )
+const useMessagesOfConver = () => {
+  return useCustomSelector((state) => state.messages.messages)
 }
 
 export default useMessagesOfConver
