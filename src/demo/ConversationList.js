@@ -9,7 +9,7 @@ import { Virtuoso } from 'react-virtuoso'
 
 import './conversationList.scss'
 
-const ConversationList = ({ convNum = 1000 }) => {
+const ConversationList = ({ convNum = 10 }) => {
   const [isVirtualized, setIsVirtualized] = useState(0)
 
   const { outerRef, innerRef, items } = useVirtual({
@@ -84,40 +84,41 @@ const ConversationList = ({ convNum = 1000 }) => {
         list = (
           <ul
             ref={outerRef}
-            style={{ width: '100%', height: '1000px', overflow: 'auto' }}
+            style={{ width: '100%', height: '100%', overflow: 'auto' }}
             className="conversations-list"
           >
             <div ref={innerRef}>
-              {items.map((item) => {
-                return (
-                  <li
-                    ref={item.measureRef}
-                    key={item.index}
-                    className={`conversation-item `}
-                  >
-                    <div
-                      className="conversation-item__avatar"
-                      style={{
-                        backgroundImage: `url(${convers[item.index].avatar})`,
-                      }}
-                    ></div>
-                    <div className="conversation-item__content">
-                      <span className="conversation-item__name">
-                        {convers[item.index].title}
-                      </span>
-                      <p className="conversation-item__last-msg">
-                        {convers[item.index].lastMessage.slice(0, 100)}
-                      </p>
-                      <p style={{ fontSize: '10px', fontStyle: 'italic' }}>
-                        Powered by Cool Virtual
-                      </p>
-                    </div>
-                    <i
-                      className={`fas fa-ellipsis-h conversation-item__more-tools`}
-                    ></i>
-                  </li>
-                )
-              })}
+              {items.length > 0 &&
+                items.map(({ index, size, measureRef }) => {
+                  return (
+                    <li
+                      ref={measureRef}
+                      key={index}
+                      className={`conversation-item `}
+                    >
+                      <div
+                        className="conversation-item__avatar"
+                        style={{
+                          backgroundImage: `url(${convers[index].avatar})`,
+                        }}
+                      ></div>
+                      <div className="conversation-item__content">
+                        <span className="conversation-item__name">
+                          {convers[index].title} {index + 1}
+                        </span>
+                        <p className="conversation-item__last-msg">
+                          {convers[index].lastMessage.slice(0, 100)}
+                        </p>
+                        <p style={{ fontSize: '10px', fontStyle: 'italic' }}>
+                          Powered by Cool Virtual
+                        </p>
+                      </div>
+                      <i
+                        className={`fas fa-ellipsis-h conversation-item__more-tools`}
+                      ></i>
+                    </li>
+                  )
+                })}
             </div>
           </ul>
         )

@@ -7,6 +7,7 @@ import SearchBar from '../features/search/SearchBar'
 
 const LeftContent = (props) => {
   const location = useLocation()
+
   const [currentTab, setCurrentTab] = useState('')
   useEffect(() => {
     if (location.hash === '#notifications') {

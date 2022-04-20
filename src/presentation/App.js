@@ -2,7 +2,6 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import ZaluChat from './pages/ZaluChat'
-// import ZaluChat from 'demo/ZaluChat'
 import Login from './pages/login/Login'
 import Register from './pages/Register'
 import RequiredAuth from './hoc/RequiredAuth'

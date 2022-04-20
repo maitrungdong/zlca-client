@@ -1,10 +1,8 @@
-import Logout from 'domain/usecases/Auth/Logout'
-import authRepository from 'infrastructure/repositories/AuthRepository'
+import authManager from 'domain/managers/AuthManager.js'
 
 export default function NavigationMenuVM() {
-  const logout = (userId) => {
-    const uc = new Logout(authRepository)
-    uc.invoke(userId)
+  const logout = async (userId) => {
+    await authManager.logout(userId)
   }
 
   return {

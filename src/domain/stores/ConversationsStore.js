@@ -1,5 +1,5 @@
-import { reduxStore } from '../reduxStore.js'
-import { conversActions } from '../slices/conversSlice.js'
+import { reduxStore } from './redux/reduxStore.js'
+import { conversActions } from './redux/slices/conversSlice.js'
 
 //Đọc thêm các comment bên MessagesStore để rõ hơn.
 class ConversStore {
@@ -16,24 +16,39 @@ class ConversStore {
       conversActions.getConversOfUserFulFilled({ conversations })
     )
   }
-  getConversOfUserFailed() {
-    reduxStore.dispatch(conversActions.getConversOfUserRejected())
-  }
-
-  getConversOfUserFromStore() {
-    return reduxStore.getState().convers.convers
+  getConversOfUserFailed(errMessage) {
+    reduxStore.dispatch(conversActions.getConversOfUserRejected(errMessage))
   }
 
   switchCurrentConverLoading() {
     reduxStore.dispatch(conversActions.switchCurrConverPending())
   }
-  switchCurrentConverSuccess(currentConver) {
+  switchCurrentConverSuccess(converId, newConvers) {
     reduxStore.dispatch(
-      conversActions.switchCurrConverFulfilled({ currentConver })
+      conversActions.switchCurrConverFulfilled({ converId, newConvers })
     )
   }
   switchCurrentConverFailed(errMessage) {
     reduxStore.dispatch(conversActions.switchCurrConverRejected({ errMessage }))
+  }
+
+  getCurrentConverId() {
+    return reduxStore.getState().convers.currentId
+  }
+
+  getCurrentConver() {
+    const currConverId = this.getCurrentConverId()
+    return reduxStore
+      .getState()
+      .convers.convers.find((c) => c.id === currConverId)
+  }
+
+  getConversFromStore() {
+    return reduxStore.getState().convers.convers
+  }
+
+  updateConver(conver) {
+    reduxStore.dispatch(conversActions.updateConver({ conver }))
   }
 }
 
