@@ -1,7 +1,7 @@
 import { useCustomSelector } from './useCustomSelector'
 
-const useMessagesOfConver = () => {
+const useMessagesOfCC = () => {
   return useCustomSelector((state) => state.messages.messages)
 }
 
-export default useMessagesOfConver
+export default useMessagesOfCC

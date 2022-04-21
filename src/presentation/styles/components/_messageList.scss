@@ -4,9 +4,10 @@
   height: calc(100vh - $header-height - $footer-height);
   background-color: $white-ter;
   padding-bottom: 0.2rem;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   & > div > div:first-child {
     overflow-x: hidden !important;
-    margin-bottom: 0 !important;
   }
 }
