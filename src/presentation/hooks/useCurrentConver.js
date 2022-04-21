@@ -6,7 +6,6 @@ const useCurrentConver = () => {
     return state.convers.convers.find((c) => c.id === currConverId)
   })
 
-  console.log({ currConver })
   return currConver
 }
 
