@@ -47,7 +47,10 @@ class ConversManager {
         lastMessageTitle = 'Bạn: '
       }
       if (conver.lastMessage.messageType === messageType.TEXT) {
-        lastMessageTitle += conver.lastMessage.textContent.slice(0, 20) + '...'
+        lastMessageTitle +=
+          conver.lastMessage.textContent.length > 50
+            ? conver.lastMessage.textContent.slice(0, 50) + '...'
+            : conver.lastMessage.textContent
       } else if (conver.lastMessage.messageType === messageType.LINK) {
         lastMessageTitle += '[LINK]'
       } else {

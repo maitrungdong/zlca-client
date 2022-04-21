@@ -5,10 +5,11 @@
   gap: 1rem;
   justify-content: flex-start;
 
-  margin-top: 1.5rem;
-  margin-bottom: 0 !important;
+  padding-top: 1.5rem;
 
   padding-left: 1rem;
+
+  margin-bottom: 0 !important;
 
   &.me {
     display: flex;
@@ -51,7 +52,7 @@
     display: inline-block;
 
     &__main {
-      margin-bottom: 0.4rem;
+      padding-bottom: 0.4rem;
     }
 
     &__bottom {
