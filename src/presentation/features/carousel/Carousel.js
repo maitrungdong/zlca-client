@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 import inappWlcScreen0 from 'presentation/assets/images/inapp-welcome-screen-0.jpg'
 import inappWlcScreen1 from 'presentation/assets/images/inapp-welcome-screen-01.jpg'
@@ -58,20 +64,11 @@ const slideContents = [
 ]
 
 const Carousel = () => {
-  const [marginSlideshow, setMarginSlideShow] = useState('')
-
-  const slideShowContainerCallback = useMemo(() => {
-    return (ele) => {
-      if (ele) {
-        const height = ele.clientHeight
-        setMarginSlideShow(`calc((100vh - ${height}px)/2)`)
-      }
-    }
-  }, [])
+  useLayoutEffect(() => {}, [])
 
   return (
-    <div className="slide-show" style={{ marginTop: marginSlideshow }}>
-      <div className="slide-show__container" ref={slideShowContainerCallback}>
+    <div className="slide-show">
+      <div className="slide-show__container">
         <div className="slide-header">
           <div className="slide-header__title">
             Chào mừng đến với <span>Zalu Chat!</span>

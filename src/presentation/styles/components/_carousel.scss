@@ -5,15 +5,17 @@
   height: 100%;
 
   &__container {
+    margin-top: 8rem;
+
     .slide-header {
       width: 42rem;
       margin: 0 auto;
-      margin-bottom: 2rem;
+      padding-bottom: 2rem;
       text-align: center;
 
       &__title {
         font-size: 2.4rem;
-        margin-bottom: 1.4rem;
+        padding-bottom: 1.4rem;
         span {
           font-weight: 600;
         }
@@ -26,8 +28,8 @@
     .slide {
       &__img {
         width: 38rem;
-        margin: 0 auto;
         margin-bottom: 2rem;
+        margin: 0 auto;
 
         image {
           height: 100%;
@@ -45,7 +47,7 @@
       &__desc {
         display: block;
         text-align: center;
-        margin-bottom: 6rem;
+        padding-bottom: 6rem;
       }
     }
   }
