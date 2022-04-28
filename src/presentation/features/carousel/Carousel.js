@@ -64,8 +64,6 @@ const slideContents = [
 ]
 
 const Carousel = () => {
-  useLayoutEffect(() => {}, [])
-
   return (
     <div className="slide-show">
       <div className="slide-show__container">
@@ -79,26 +77,28 @@ const Carousel = () => {
           </p>
         </div>
 
-        <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
-          slidesPerView={1}
-          navigation
-          pagination={{ clickable: true }}
-          scrollbar={{ draggable: true }}
-          autoplay={{ delay: 2000 }}
-        >
-          {slideContents.map((slide, idx) => {
-            return (
-              <SwiperSlide key={idx} className="slide">
-                <div className="slide__img">
-                  <img src={slide.image} alt={slide.title} />
-                </div>
-                <p className="slide__title">{slide.title}</p>
-                <span className="slide__desc">{slide.description}</span>
-              </SwiperSlide>
-            )
-          })}
-        </Swiper>
+        <div className="hello">
+          <Swiper
+            modules={[Navigation, Pagination, Autoplay]}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            scrollbar={{ draggable: true }}
+            autoplay={{ delay: 2000 }}
+          >
+            {slideContents.map((slide, idx) => {
+              return (
+                <SwiperSlide key={idx} className="slide">
+                  <div className="slide__img">
+                    <img src={slide.image} alt={slide.title} />
+                  </div>
+                  <p className="slide__title">{slide.title}</p>
+                  <span className="slide__desc">{slide.description}</span>
+                </SwiperSlide>
+              )
+            })}
+          </Swiper>
+        </div>
       </div>
     </div>
   )

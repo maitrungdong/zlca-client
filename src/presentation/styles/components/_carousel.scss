@@ -5,7 +5,8 @@
   height: 100%;
 
   &__container {
-    margin-top: 8rem;
+    height: 50rem;
+    margin-top: calc((100vh - 50rem) / 2);
 
     .slide-header {
       width: 42rem;
@@ -42,6 +43,7 @@
         font-weight: 500;
         color: $color-info;
         text-align: center;
+        padding-top: 2rem;
       }
 
       &__desc {
