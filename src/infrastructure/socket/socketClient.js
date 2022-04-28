@@ -11,3 +11,7 @@ export const initSocketClient = () => {
 export const getSocketClient = () => {
   return socketClient
 }
+
+export const disconnect = () => {
+  socketClient.disconnect()
+}

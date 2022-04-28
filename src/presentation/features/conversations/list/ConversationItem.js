@@ -22,7 +22,9 @@ const ConversationItem = ({ conver, onClick }) => {
       ></div>
       <div className="conversation-item__content">
         <span className="conversation-item__name">{conver.title}</span>
-        <p className="conversation-item__sub-desc">{conver.lastMessageTitle}</p>
+        <span className="conversation-item__last-msg">
+          {conver.lastMessageTitle}
+        </span>
       </div>
       <i
         className={`fas fa-ellipsis-h conversation-item__more-tools ${

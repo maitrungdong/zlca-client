@@ -6,6 +6,7 @@ import messagesManager from 'domain/managers/MessagesManager'
 import {
   initSocketClient,
   getSocketClient,
+  disconnect,
 } from 'infrastructure/socket/socketClient.js'
 
 /** [ISSUES]: Socket nên một module riêng, chúng ta nên tạo kết nối, hay listen
@@ -21,7 +22,10 @@ import {
 
 const socketMiddleware = (initSocketClient) => {
   return (store) => (next) => (action) => {
-    if (action.type === 'persist/REHYDRATE' && action.payload?.isLoggedIn) {
+    if (
+      action.type === 'auth/loginFulfilled' ||
+      (action.type === 'persist/REHYDRATE' && action.payload?.isLoggedIn)
+    ) {
       const { userInfo } = action.payload
 
       let socket = getSocketClient()
@@ -31,31 +35,28 @@ const socketMiddleware = (initSocketClient) => {
         socket.emit(socketEvents.ADD_NEW_USER, userInfo.id)
 
         //Add event listeners
-        // socket.on(socketEvents.GET_MESSAGE, (data) => {
-        //   messagesManager.saveArrivalMessage(data.message)
-        // })
-        window.electronAPI.onArrivalMessage((_, message) => {
-          messagesManager.saveArrivalMessage(message)
+        socket.on(socketEvents.GET_MESSAGE, (data) => {
+          messagesManager.saveArrivalMessage(data.message)
         })
       }
     } else if (action.type === 'messages/saveMessageFulfilled') {
-      // const me = store.getState().auth.userInfo
-      // const currentConver = conversStore.getCurrentConver()
-      // const members = currentConver.members
+      const me = store.getState().auth.userInfo
+      const currentConver = conversStore.getCurrentConver()
+      const members = currentConver.members
 
-      // const socket = getSocketClient()
+      const socket = getSocketClient()
 
       try {
-        //Thiếu cái conversation nhận là gì?
-        // socket.emit(socketEvents.SEND_MESSAGE, {
-        //   senderId: me.id,
-        //   receiverId: members.find((mem) => mem.id !== me.id).id,
-        //   message: action.payload.newMessage,
-        // })
-        window.electronAPI.sendNewMessage(action.payload.newMessage)
+        socket.emit(socketEvents.SEND_MESSAGE, {
+          senderId: me.id,
+          receiverId: members.find((mem) => mem.id !== me.id).id,
+          message: action.payload.newMessage,
+        })
       } catch (err) {
         console.log(err)
       }
+    } else if (action.type === 'auth/logoutFulfilled') {
+      disconnect()
     }
     return next(action)
   }

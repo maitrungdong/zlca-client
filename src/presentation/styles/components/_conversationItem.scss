@@ -33,12 +33,23 @@
     border-radius: 50%;
   }
 
+  &__content {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+  }
+
   &__name {
     font-size: 1.6rem;
     font-weight: 500;
   }
 
-  &__sub-desc {
+  &__last-msg {
+    display: inline-block;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden !important;
   }
 
   &__more-tools {
