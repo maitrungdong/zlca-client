@@ -4,6 +4,7 @@ import GetMessagesOfConver from 'usecases/messages/GetMessagesOfConver.js'
 import SaveNewMessage from 'usecases/messages/SaveNewMessage'
 import messagesRepository from 'data/repositories/MessagesRepository'
 import conversManager from './ConversManager'
+import conversStore from 'stores/ConversationsStore.js'
 
 class MessagesManager {
   standardMessage(msg) {
@@ -46,8 +47,10 @@ class MessagesManager {
   async saveNewMessage(msg) {
     try {
       messagesStore.saveNewMessageLoading()
+
+      const receiver = conversStore.getReceiverOfConver(msg.senderId)
       const uc = new SaveNewMessage(messagesRepository)
-      const res = await uc.invoke(msg)
+      const res = await uc.invoke(msg, receiver.id)
 
       const newMessage = this.standardMessage(res)
       messagesStore.saveNewMessageSuccess(newMessage)

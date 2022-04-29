@@ -1,11 +1,27 @@
+import SocketClient from 'socket/socketClient.js'
+import { socketEvents } from 'utils/constants.js'
+
 class SaveNewMessage {
   _messagesRepo = null
-  constructor(messagesRepo) {
+  _conversRepo = null
+  constructor(messagesRepo, conversRepo) {
     this._messagesRepo = messagesRepo
+    this._conversRepo = conversRepo
   }
-  async invoke(newMessage) {
+  async invoke(newMessage, receiverId) {
     try {
-      return await this._messagesRepo.saveNewMessage(newMessage)
+      const res = await this._messagesRepo.saveNewMessage(newMessage)
+      if (res) {
+        SocketClient.emit({
+          event: socketEvents.SEND_MESSAGE,
+          payload: {
+            senderId: newMessage.senderId,
+            receiverId: receiverId,
+            message: res,
+          },
+        })
+      }
+      return res
     } catch (err) {
       throw err
     }

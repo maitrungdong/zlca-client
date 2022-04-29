@@ -8,7 +8,7 @@ import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
-import socketMiddleware from './middleware/socketMiddleware.js'
+import myMiddleware from './middleware/myMiddleware.js'
 
 const persistCommonConfig = {
   storage: storage,
@@ -30,7 +30,7 @@ export const reduxStore = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).concat([socketMiddleware]),
+    }).concat([myMiddleware]),
 })
 
 persistStore(reduxStore)

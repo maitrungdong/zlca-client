@@ -1,3 +1,5 @@
+import SocketClient from 'socket/socketClient.js'
+
 class Logout {
   _authRepo = null
   constructor(authRepo) {
@@ -6,7 +8,10 @@ class Logout {
 
   async invoke(userId) {
     try {
-      return await this._authRepo.logout(userId)
+      console.log({ LogoutUserId: userId })
+      await this._authRepo.logout(userId)
+
+      SocketClient.disconnect()
     } catch (err) {
       throw err
     }

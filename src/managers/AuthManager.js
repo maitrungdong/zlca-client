@@ -45,7 +45,6 @@ class AuthManager {
 
   async register(userInfo) {
     try {
-      debugger
       authStore.registerLoading()
 
       const uc = new Register(authRepository)

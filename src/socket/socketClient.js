@@ -1,17 +1,41 @@
 import { io } from 'socket.io-client'
 import { serverBaseURLs } from 'utils/constants.js'
 
-let socketClient = null
+const SocketClient = (function () {
+  let socketInstance = null
 
-export const initSocketClient = () => {
-  socketClient = io(serverBaseURLs.SOCKET)
-  return socketClient
-}
+  const createInstance = () => {
+    const instance = io(serverBaseURLs.SOCKET)
+    return instance
+  }
 
-export const getSocketClient = () => {
-  return socketClient
-}
+  return {
+    init: (listeners = []) => {
+      if (!socketInstance) {
+        console.log('CREATING...socket')
+        socketInstance = createInstance()
+        console.log('CREATED...socket')
 
-export const disconnect = () => {
-  socketClient.disconnect()
-}
+        //TODO: Đăng kí các listener{event, callback} cho socketInstance.
+        listeners.forEach((listener) => {
+          socketInstance.on(listener.event, listener.callback)
+        })
+      }
+    },
+    listen({ event, callback }) {
+      socketInstance.on(event, callback)
+    },
+    emit({ event, payload }) {
+      socketInstance.emit(event, payload)
+    },
+    disconnect: () => {
+      if (socketInstance) {
+        console.log('DISCONNECTING...socket')
+        socketInstance.disconnect()
+        console.log({ socketInstance })
+      }
+    },
+  }
+})()
+
+export default SocketClient

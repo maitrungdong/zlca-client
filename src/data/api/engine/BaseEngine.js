@@ -134,8 +134,9 @@ class BaseEngine {
 
   checkNetworkConnect = async () => {
     try {
-      const online = await fetch('https://www.google.com')
-      return online.status >= 200 && online.status < 300
+      // const online = await fetch('https://www.google.com/')
+      // return online.status >= 200 && online.status < 300
+      return true
     } catch (err) {
       return false
     }

@@ -47,6 +47,12 @@ class ConversStore {
     return reduxStore.getState().convers.convers
   }
 
+  getReceiverOfConver(senderId) {
+    const currentConver = this.getCurrentConver()
+    const receiver = currentConver.members.find((mem) => mem.id !== senderId)
+    return receiver
+  }
+
   updateConver(conver) {
     reduxStore.dispatch(conversActions.updateConver({ conver }))
   }
