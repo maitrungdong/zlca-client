@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CurrentConverHeader = ({ title, avatar, lastActivity }) => {
+const CurrentConverHeader = ({ avatar, title, lastActivity }) => {
   return (
     <div className="current-conver-header">
       <div className="current-conver-header__left">

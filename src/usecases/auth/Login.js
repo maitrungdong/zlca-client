@@ -25,8 +25,6 @@ class Login {
           },
         ])
 
-        console.log('AT HERE')
-        debugger
         SocketClient.emit({
           event: socketEvents.ADD_NEW_USER,
           payload: userId,

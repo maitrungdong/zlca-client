@@ -7,4 +7,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onArrivalMessage: (callback) => {
     ipcRenderer.on('event://arrival-message-per01', callback)
   },
+
+  openFile: async () => await ipcRenderer.invoke('event://open-file'),
 })

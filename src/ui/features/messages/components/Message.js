@@ -13,11 +13,18 @@ const Message = ({ message }) => {
         style={{ backgroundImage: `url(${message.senderAvatar})` }}
       ></div>
       <div className="message-content">
-        {/* //messageType của nó là gì. Nếu là images thì ta sẽ
-          //render một loạt các image... tùy theo kích cỡ
-          //Nếu là text thông thường thì mình lưu bình thường. */}
-
         <div className="message-content__main">
+          {message.images &&
+            message.images.map((img) => {
+              return (
+                <img
+                  key={img.id}
+                  alt="hinh anh"
+                  src={img.imageUrl}
+                  style={{ height: '200px', marginRight: '0.8rem' }}
+                />
+              )
+            })}
           <TextMessage content={message.textContent} />
         </div>
 
@@ -30,9 +37,6 @@ const Message = ({ message }) => {
               opts={{ minInterval: 60 }}
             />
           </span>
-          {/* {message.id === currentChat.lastMessageId ? (
-            <span className="message-content__bottom-status">Đã gửi</span>
-          ) : null} */}
         </div>
       </div>
     </div>
