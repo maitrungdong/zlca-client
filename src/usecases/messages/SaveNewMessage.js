@@ -10,7 +10,14 @@ class SaveNewMessage {
   }
   async invoke(newMessage, receiverId) {
     try {
+      if (
+        newMessage.textContent.trim() === '' &&
+        !newMessage?.images?.length > 0
+      )
+        return
+
       const res = await this._messagesRepo.saveNewMessage(newMessage)
+      console.log({ res })
       if (res) {
         SocketClient.emit({
           event: socketEvents.SEND_MESSAGE,

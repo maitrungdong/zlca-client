@@ -1,4 +1,13 @@
 @import '../abstracts/variables';
 
 .current-conver {
+  position: relative;
+
+  &-body {
+    height: calc(100vh - $header-height - $footer-height);
+
+    &.down-height {
+      height: calc(100vh - $header-height - $footer-height - 10rem);
+    }
+  }
 }

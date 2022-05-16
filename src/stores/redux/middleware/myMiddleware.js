@@ -1,6 +1,5 @@
 import { socketEvents } from 'utils/constants.js'
 
-import conversStore from 'stores/ConversationsStore.js'
 import messagesManager from 'managers/MessagesManager.js'
 
 import SocketClient from 'socket/socketClient.js'
