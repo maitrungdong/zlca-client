@@ -1,5 +1,5 @@
 import messagesAPIDataSource from 'data/api/dataSources/messagesAPIDataSource.js'
-import axiosClient from 'data/api/engine/axiosClient'
+import ZlcaClient from 'data/api/core/ZlcaClient.js'
 
 class MessagesRepository {
   async getMessagesOfConver(converId) {
@@ -32,7 +32,7 @@ class MessagesRepository {
         fd.append('upload_preset', 'imgs-upload')
         fd.append('cloud_name', 'imgs-store')
 
-        return axiosClient.post(
+        return ZlcaClient.post(
           `https://api.cloudinary.com/v1_1/imgs-store/image/upload`,
           fd
         )

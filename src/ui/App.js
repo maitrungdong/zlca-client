@@ -11,11 +11,7 @@ import { ToastContainer } from 'react-toastify'
 
 import 'react-toastify/dist/ReactToastify.css'
 
-import BaseEngine from 'data/api/engine/BaseEngine.js'
-
 function App() {
-  const isOnline = new BaseEngine().checkNetworkConnect()
-  console.log({ NETWORK_IS_AVAILABLE: isOnline })
   return (
     <div className="app">
       <Routes>

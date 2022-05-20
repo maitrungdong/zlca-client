@@ -5,6 +5,7 @@ import SaveNewMessage from 'usecases/messages/SaveNewMessage'
 import messagesRepository from 'data/repositories/MessagesRepository'
 import conversManager from './ConversManager'
 import conversStore from 'stores/ConversationsStore.js'
+import { messageType } from 'utils/constants'
 
 class MessagesManager {
   standardMessage(msg) {
@@ -47,6 +48,14 @@ class MessagesManager {
   async saveNewMessage(msg) {
     try {
       messagesStore.saveNewMessageLoading()
+
+      if (msg.images && msg.images.length > 0) {
+        msg.messageType = messageType.IMAGE
+      } else if (msg.link) {
+        msg.messageType = messageType.LINK
+      } else {
+        msg.messageType = messageType.TEXT
+      }
 
       const receiver = conversStore.getReceiverOfConver(msg.senderId)
       const uc = new SaveNewMessage(messagesRepository)
