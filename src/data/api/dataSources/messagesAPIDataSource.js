@@ -1,9 +1,13 @@
-import axiosClient from 'data/api/engine/axiosClient.js'
+import ZlcaClient from '../core/ZlcaClient.js'
 
 const messagesAPIDataSource = {
   getMessagesOfConver: async (converId) => {
     try {
-      const res = await axiosClient.get(`/api/messages?converId=${converId}`)
+      const res = await ZlcaClient.get(`/api/messages`, {
+        query: {
+          converId,
+        },
+      })
 
       if (res.success) {
         return res.data
@@ -17,7 +21,11 @@ const messagesAPIDataSource = {
 
   saveNewMessage: async (newMessage) => {
     try {
-      const res = await axiosClient.post(`/api/messages`, newMessage)
+      const res = await ZlcaClient.post(`/api/messages`, {
+        body: {
+          ...newMessage,
+        },
+      })
 
       if (res.success) {
         return res.data
