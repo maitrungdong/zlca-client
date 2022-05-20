@@ -43,7 +43,8 @@ class AxiosEngine {
   }
 
   request = async (rqInit, rtOptions) => {
-    const { url, ...rqInitParams } = rqInit
+    const { url, signal, ...rqInitParams } = rqInit
+
     const retryOptions = {
       maxRetries: rtOptions.maxRetries
         ? rtOptions.maxRetries
@@ -61,6 +62,7 @@ class AxiosEngine {
 
     const requestInit = {
       ...rqInitParams,
+      signal,
       headers: {
         ...(rqInitParams.headers || {}),
       },
@@ -115,7 +117,11 @@ class AxiosEngine {
     const response = this._standardResponse(await this._tryRequest(request))
     if (response.success) {
       return response
-    } else if (retries > 0 && retryableErrors.includes(response.statusCode)) {
+    } else if (
+      retries > 0 &&
+      retryableErrors.includes(response.statusCode) &&
+      !request.signal.aborted
+    ) {
       await delay(msBackoff)
       return this._requestWithRetries(
         request,

@@ -37,8 +37,11 @@ class ZlcaClient {
 
   generateRestMethod(method) {
     return (route, init, rtOptions) => {
+      console.log({ init })
       const query = init && init.query
       const body = init && init.body
+      const signal = init && init.signal
+
       let parsedBody = ''
 
       if (method !== 'get') {
@@ -52,6 +55,7 @@ class ZlcaClient {
           {
             url: this.getAPIUrl(route, query),
             method: method.toUpperCase(),
+            signal,
           },
           !!parsedBody && { data: parsedBody }
         ),
