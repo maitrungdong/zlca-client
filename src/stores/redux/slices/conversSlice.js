@@ -46,6 +46,12 @@ const conversSlice = createSlice({
         else return c
       })
     },
+    saveNewConver(state, action) {
+      state.convers.push(action.payload.newConver)
+    },
+    saveArrivalConver(state, action) {
+      state.convers.push(action.payload.arrivalConver)
+    },
   },
 })
 

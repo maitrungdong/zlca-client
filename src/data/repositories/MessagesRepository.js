@@ -1,5 +1,5 @@
 import messagesAPIDataSource from 'data/api/dataSources/messagesAPIDataSource.js'
-import ZlcaClient from 'data/api/core/ZlcaClient.js'
+import axios from 'axios'
 
 class MessagesRepository {
   async getMessagesOfConver(converId) {
@@ -15,32 +15,46 @@ class MessagesRepository {
     try {
       if (newMessage?.images?.length > 0) {
         const imagesUrl = await this._uploadImgToCloudinary(newMessage.images)
+        console.log(imagesUrl)
         newMessage.images = imagesUrl
       }
       const res = await messagesAPIDataSource.saveNewMessage(newMessage)
       return res
     } catch (err) {
+      console.log({ err })
       throw err
     }
   }
 
   async _uploadImgToCloudinary(msgImages) {
-    const res = await Promise.all([
-      ...msgImages.map((blobFile) => {
-        const fd = new FormData()
-        fd.append('file', blobFile)
-        fd.append('upload_preset', 'imgs-upload')
-        fd.append('cloud_name', 'imgs-store')
+    try {
+      const res = await Promise.all([
+        ...msgImages.map((blobFile) => {
+          const fd = new FormData()
+          fd.append('file', blobFile)
+          fd.append('upload_preset', 'imgs-upload')
+          fd.append('cloud_name', 'imgs-store')
 
-        return ZlcaClient.post(
-          `https://api.cloudinary.com/v1_1/imgs-store/image/upload`,
-          fd
-        )
-      }),
-    ])
+          return axios.post(
+            'https://api.cloudinary.com/v1_1/imgs-store/image/upload',
+            fd
+          )
+        }),
+      ])
+      if (res) {
+        return res.map((res) => res.data.url)
+      }
+    } catch (err) {
+      throw err
+    }
+  }
 
-    if (res) {
-      return res.map((res) => res.url)
+  async saveArrivalMessage(arrivalMsg) {
+    try {
+      //TODO: save arrivalMsg to client-side db or something else.
+      console.log({ arrivalMsg })
+    } catch (err) {
+      throw err
     }
   }
 }

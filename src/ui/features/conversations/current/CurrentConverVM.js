@@ -2,10 +2,15 @@ import messagesManager from 'managers/MessagesManager.js'
 import { useEffect, useRef, useState } from 'react'
 
 import { useCurrentConver, useMe } from 'ui/hooks'
+import { useCustomSelector } from 'ui/hooks/useCustomSelector'
 
 const CurrentConverVM = () => {
   const me = useMe()
   const currentConver = useCurrentConver()
+  const isSending = useCustomSelector((state) => {
+    console.log({ isSendingMsg: state.messages.isSendingMsg })
+    return state.messages.isSendingMsg
+  })
 
   const isOpenFileDialog = useRef(false)
 
@@ -15,17 +20,23 @@ const CurrentConverVM = () => {
   const msgImages = useRef([])
 
   const sendMessage = async () => {
-    const newMessage = {
-      conversationId: currentConver.id,
-      senderId: me.id,
-      textContent: msgTextContent,
-      images: msgImages.current,
-    }
-    await messagesManager.saveNewMessage(newMessage)
+    //debugger
+    if (
+      !isSending &&
+      (msgTextContent.trim() !== '' || msgImages.current?.length > 0)
+    ) {
+      const newMessage = {
+        conversationId: currentConver.id,
+        senderId: me.id,
+        textContent: msgTextContent,
+        images: msgImages.current,
+      }
+      await messagesManager.saveNewMessage(newMessage)
 
-    setMsgTextContent('')
-    setImgURLsPreview([])
-    msgImages.current = []
+      setMsgTextContent('')
+      setImgURLsPreview([])
+      msgImages.current = []
+    }
   }
 
   useEffect(() => {
@@ -75,6 +86,7 @@ const CurrentConverVM = () => {
     deleteImgURLPreview,
     msgTextContent,
     setMsgTextContent,
+    isSending,
   }
 }
 

@@ -4,6 +4,7 @@ class NetworkStatus {
     this.offlineListener = []
     this.changeListener = []
   }
+
   addEventListener(event, listener) {
     if (event === 'online') {
       window.addEventListener('online', listener)
@@ -19,6 +20,12 @@ class NetworkStatus {
       this.changeListener.push(listener)
     }
   }
+
+  async callAnAPItoTest() {
+    const res = await fetch('../data/api/core/img1x1.png')
+    console.log({ res })
+  }
+
   removeListener(event, listener) {
     switch (event) {
       case 'online': {
@@ -46,4 +53,6 @@ class NetworkStatus {
 }
 
 const networkStatus = new NetworkStatus()
+networkStatus.callAnAPItoTest()
+
 export default networkStatus

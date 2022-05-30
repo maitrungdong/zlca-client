@@ -1,6 +1,5 @@
 import React from 'react'
 
-import TimeAgo from 'timeago-react'
 import * as timeago from 'timeago.js'
 import vi from 'timeago.js/lib/lang/vi'
 timeago.register('vi', vi)

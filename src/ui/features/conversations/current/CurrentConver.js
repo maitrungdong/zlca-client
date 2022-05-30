@@ -16,6 +16,7 @@ const CurrentConver = () => {
     deleteImgURLPreview,
     msgTextContent,
     setMsgTextContent,
+    isSending,
   } = useCurrentConverVM()
 
   return (
@@ -37,6 +38,7 @@ const CurrentConver = () => {
         deleteImgURLPreview={deleteImgURLPreview}
         msgTextContent={msgTextContent}
         setMsgTextContent={setMsgTextContent}
+        isSending={isSending}
       />
     </div>
   )
