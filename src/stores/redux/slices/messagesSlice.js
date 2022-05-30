@@ -4,6 +4,7 @@ const initialState = {
   messages: [],
 
   isLoading: false,
+  isSendingMsg: false,
   errMessage: null,
 }
 
@@ -28,15 +29,15 @@ const messagesSlice = createSlice({
       state.messages.push(action.payload.arrivalMessage)
     },
     saveNewMessagePending(state, action) {
-      state.isLoading = true
+      state.isSendingMsg = true
       state.errMessage = null
     },
     saveMessageFulfilled(state, action) {
       state.messages.push(action.payload.newMessage)
-      state.isLoading = false
+      state.isSendingMsg = false
     },
     saveNewMessageRejected(state, action) {
-      state.isLoading = false
+      state.isSendingMsg = false
       state.errMessage = action.payload.errMessage
     },
   },

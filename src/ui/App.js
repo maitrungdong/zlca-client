@@ -1,54 +1,18 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import ZaluChat from './pages/ZaluChat'
+// import ZaluChat from 'demo/ZaluChat'
 import Login from './pages/login/Login'
 import Register from './pages/Register'
 import RequiredAuth from './hoc/RequiredAuth'
 import NotFound from './pages/NotFound'
-
 import { ToastContainer } from 'react-toastify'
-import networkStatus from 'utils/networkStatus.js'
-import { toast } from 'react-toastify'
 
-import 'react-toastify/dist/ReactToastify.css'
+import { useNotifNetworkStatus } from './hooks'
 
 function App() {
-  useEffect(() => {
-    const notifyOnlineNetwork = function (_) {
-      toast.success(
-        `Mạng của bạn đã được khôi phục lại! Vui lòng refresh lại trang.`,
-        {
-          position: 'top-right',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        }
-      )
-    }
-    const notifyOfflineNetwork = function (_) {
-      toast.error(`Lỗi kết nối internet! Vui lòng thử lại sau.`, {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
-    }
-
-    networkStatus.addEventListener('online', notifyOnlineNetwork)
-    networkStatus.addEventListener('offline', notifyOfflineNetwork)
-
-    return () => {
-      networkStatus.removeListener('online', notifyOnlineNetwork)
-      networkStatus.removeListener('offline', notifyOfflineNetwork)
-    }
-  }, [])
+  useNotifNetworkStatus()
 
   return (
     <div className="app">

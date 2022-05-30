@@ -39,6 +39,32 @@ const conversAPIDataSource = {
       throw err
     }
   },
+
+  async chatWithUser(members) {
+    try {
+      const reqInit = {
+        body: {
+          members,
+        },
+      }
+      const retryOptions = {
+        maxRetries: 1,
+      }
+      const res = await ZlcaClient.post(
+        '/api/conversations/chat-with-user',
+        reqInit,
+        retryOptions
+      )
+
+      if (res.success) {
+        return res.data
+      } else {
+        throw new Error(res.message)
+      }
+    } catch (err) {
+      throw err
+    }
+  },
 }
 
 export default conversAPIDataSource

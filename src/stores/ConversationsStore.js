@@ -56,6 +56,13 @@ class ConversStore {
   updateConver(conver) {
     reduxStore.dispatch(conversActions.updateConver({ conver }))
   }
+
+  saveNewConver(newConver) {
+    reduxStore.dispatch(conversActions.saveNewConver({ newConver }))
+  }
+  saveArrivalConver(arrivalConver) {
+    reduxStore.dispatch(conversActions.saveArrivalConver({ arrivalConver }))
+  }
 }
 
 const conversStore = new ConversStore()

@@ -1,11 +1,17 @@
-import authStore from 'stores/AuthStore'
+//stores:
+import authStore from 'stores/AuthStore.js'
 import messagesStore from 'stores/MessagesStore.js'
-import GetMessagesOfConver from 'usecases/messages/GetMessagesOfConver.js'
-import SaveNewMessage from 'usecases/messages/SaveNewMessage'
-import messagesRepository from 'data/repositories/MessagesRepository'
-import conversManager from './ConversManager'
 import conversStore from 'stores/ConversationsStore.js'
-import { messageType } from 'utils/constants'
+
+//use cases:
+import getMessagesOfConverUseCase from 'usecases/messages/GetMessagesOfConver.js'
+import saveNewMessageUseCase from 'usecases/messages/SaveNewMessage.js'
+import saveArrivalMessageUseCase from 'usecases/messages/SaveArrivalMessage.js'
+
+//other managers:
+import conversManager from './ConversManager.js'
+
+import { messageType } from 'utils/constants.js'
 
 class MessagesManager {
   standardMessage(msg) {
@@ -32,10 +38,9 @@ class MessagesManager {
     try {
       messagesStore.getMessagesOfConverLoading()
 
-      const uc = new GetMessagesOfConver(messagesRepository)
-      const res = await uc.invoke(converId)
+      const res = await getMessagesOfConverUseCase.invoke({ converId })
 
-      //[TODO]: Chuẩn hóa messages
+      //[TODO]: chuẩn hóa các message
       const messages = (res || []).map((m) => {
         return this.standardMessage(m)
       })
@@ -47,6 +52,7 @@ class MessagesManager {
 
   async saveNewMessage(msg) {
     try {
+      //debugger
       messagesStore.saveNewMessageLoading()
 
       if (msg.images && msg.images.length > 0) {
@@ -58,31 +64,42 @@ class MessagesManager {
       }
 
       const receiver = conversStore.getReceiverOfConver(msg.senderId)
-      const uc = new SaveNewMessage(messagesRepository)
-      const res = await uc.invoke(msg, receiver.id)
+
+      const res = await saveNewMessageUseCase.invoke(
+        {
+          newMessage: msg,
+          receiverId: receiver.id,
+        },
+        {
+          shouldNotify: true,
+        }
+      )
 
       const newMessage = this.standardMessage(res)
       messagesStore.saveNewMessageSuccess(newMessage)
 
-      //[TODO]: Khi có tin nhắn mới thì lastMessage của một conver nào đó
-      //sẽ phải thay đổi.
       conversManager.changeLastMessageOfConver(newMessage)
     } catch (err) {
       messagesStore.saveNewMessageFailed(err.message)
     }
   }
 
-  async saveArrivalMessage(arrivalMsg) {
-    try {
-      const arrivalMessage = this.standardMessage(arrivalMsg)
-      messagesStore.saveArrivalMessage(arrivalMessage)
+  async saveArrivalMessage({ arrivalMessage }) {
+    const currentConverId = conversStore.getCurrentConverId()
 
-      //[TODO]: Khi có tin nhắn đến thì lastMessage của một conver nào đó
-      //sẽ phải thay đổi.
-      conversManager.changeLastMessageOfConver(arrivalMessage)
-    } catch (err) {}
+    const standardedMsg = this.standardMessage(arrivalMessage)
+    if (arrivalMessage.conversationId === currentConverId) {
+      messagesStore.saveArrivalMessage(standardedMsg)
+    }
+
+    conversManager.changeLastMessageOfConver(standardedMsg)
   }
 }
 
 const messagesManager = new MessagesManager()
+
+saveArrivalMessageUseCase.addListener(
+  messagesManager.saveArrivalMessage.bind(messagesManager)
+)
+
 export default messagesManager

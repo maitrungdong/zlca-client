@@ -7,6 +7,7 @@ const CurrentConverFooter = ({
   deleteImgURLPreview,
   msgTextContent,
   setMsgTextContent,
+  isSending,
 }) => {
   return (
     <div className="current-conver-footer">
@@ -43,12 +44,15 @@ const CurrentConverFooter = ({
           }}
         />
         <button
-          className="button is-info send-message"
+          className={`button is-info ${
+            isSending ? 'is-loading' : ''
+          } send-message`}
+          disabled={isSending}
           onClick={() => {
             sendMessage()
           }}
         >
-          <i className="fas fa-paper-plane"></i> Gửi tin
+          <i className="fas fa-paper-plane "></i> Gửi tin
         </button>
       </div>
       {imgURLsPreview && imgURLsPreview.length > 0 && (

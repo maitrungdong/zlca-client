@@ -2,9 +2,11 @@
 
 .search-result-list {
   width: 100%;
+  max-height: 40rem;
   min-width: 25rem;
+  overflow: auto;
 
   background-color: white;
-  border-radius: 0.5rem;
+  border-radius: 0.3rem;
   border: 0.1rem solid $grey-lighter;
 }

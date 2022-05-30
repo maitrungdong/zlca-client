@@ -2,7 +2,7 @@ import axios from 'axios'
 import delay from './delay.js'
 
 class AxiosEngine {
-  //Default option setting:
+  //Default options setting:
   options = {
     maxRetries: 5,
     msBackoff: 100,
@@ -11,7 +11,7 @@ class AxiosEngine {
   }
 
   NETWORK_ERROR = {
-    statusCode: 500,
+    statusCode: 999,
     contentType: 'text/plain',
     body: {
       success: false,
@@ -38,10 +38,16 @@ class AxiosEngine {
     }
 
     if (Array.isArray(options.retryableErrors)) {
-      this.options.retryableErrors = options.retryableErrors
+      this.options.retryableErrors = [...options.retryableErrors]
     }
   }
 
+  /**
+   *
+   * @param {object} rqInit chứa các cấu hình của một request.
+   * @param {object} rtOptions chứa cấu hình của retry strategy.
+   * @returns một response hoặc throw error
+   */
   request = async (rqInit, rtOptions) => {
     const { url, signal, ...rqInitParams } = rqInit
 
@@ -97,6 +103,7 @@ class AxiosEngine {
         body: response.data,
       }
     } catch (err) {
+      console.log(JSON.stringify(err, null, 4))
       return this.NETWORK_ERROR
     }
   }

@@ -1,64 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React from 'react'
 import SearchResultList from './SearchResultList'
+import useSearchVM from './SearchVM.js'
 
-const data = [
-  {
-    phoneNumber: '041212122',
-    fullName: 'ABC',
-  },
-  {
-    phoneNumber: '0363863748',
-    fullName: 'BCD',
-  },
-  {
-    phoneNumber: '036666689',
-    fullName: 'QWE',
-  },
-  {
-    phoneNumber: '041212122',
-    fullName: 'TRU',
-  },
-  {
-    phoneNumber: '041212122',
-    fullName: 'IUO',
-  },
-  {
-    phoneNumber: '041212122',
-    fullName: 'ABC',
-  },
-]
-
-const SearchBar = (props) => {
-  const [searchValue, setSearchValue] = useState('')
-  const [searchResults, setSearchResults] = useState([])
-
-  useEffect(() => {
-    const search = () => {
-      const result = []
-      data.forEach((d) => {
-        if (
-          searchValue.trim() !== '' &&
-          (d.fullName.toLowerCase().includes(searchValue.toLocaleLowerCase()) ||
-            d.phoneNumber.includes(searchValue))
-        ) {
-          result.push(d)
-        }
-      })
-
-      return result
-    }
-
-    const searchTimeout = setTimeout(() => {
-      const res = search()
-      if (res) {
-        setSearchResults(res)
-      }
-    }, 500)
-
-    return () => {
-      clearTimeout(searchTimeout)
-    }
-  }, [searchValue])
+const SearchBar = () => {
+  const { searchValue, setSearchValue, searchResults, chatWithUser } =
+    useSearchVM()
 
   return (
     <div className="search-bar">
@@ -79,7 +25,10 @@ const SearchBar = (props) => {
 
       <div className="search-result-container">
         {searchResults.length > 0 && (
-          <SearchResultList searchResults={searchResults} />
+          <SearchResultList
+            searchResults={searchResults}
+            chatWithUser={chatWithUser}
+          />
         )}
       </div>
     </div>

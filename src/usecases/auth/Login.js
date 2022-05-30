@@ -1,33 +1,21 @@
-import messagesManager from 'managers/MessagesManager.js'
+import authRepository from 'data/repositories/AuthRepository.js'
+import ObservableUseCase from 'usecases/ObservableUseCase.js'
 
-import SocketClient from 'socket/socketClient.js'
-import { socketEvents } from 'utils/constants.js'
-
-class Login {
+class Login extends ObservableUseCase {
   _authRepo = null
+
   constructor(authRepo) {
+    super()
     this._authRepo = authRepo
   }
 
-  async invoke(userInfo) {
+  async invoke(data, options = { shouldNotify: false }) {
     try {
-      console.log({ USER_INFO: userInfo })
-      const res = await this._authRepo.login(userInfo)
-      console.log({ USER_INFO_FROM_SERVER: res })
-      if (res.id) {
-        const { id: userId } = res
-        SocketClient.init([
-          {
-            event: socketEvents.GET_MESSAGE,
-            callback: (data) => {
-              messagesManager.saveArrivalMessage(data.message)
-            },
-          },
-        ])
+      const res = await this._authRepo.login(data.userInfo)
 
-        SocketClient.emit({
-          event: socketEvents.ADD_NEW_USER,
-          payload: userId,
+      if (options.shouldNotify) {
+        this.notifyListeners({
+          userId: res.id,
         })
       }
       return res
@@ -37,4 +25,5 @@ class Login {
   }
 }
 
-export default Login
+const loginUseCase = new Login(authRepository)
+export default loginUseCase

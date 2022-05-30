@@ -20,9 +20,24 @@ class ZlcaClient {
     this.delete = this.generateRestMethod('delete').bind(this)
   }
 
+  _isAbsoluteURL(url) {
+    const http = /^https?:\/\//i
+    const https = /^https?:\/\/|^\/\//i
+    if (http.test(url) || https.test(url)) {
+      return true
+    }
+    return false
+  }
+
   getAPIUrl(route, query) {
-    const url = new URL(this.options.apiHost)
-    url.pathname = `${route}`
+    //TODO: check route có phải là absolute url
+    let url = null
+    if (this._isAbsoluteURL(route)) {
+      url = new URL(route)
+    } else {
+      url = new URL(this.options.apiHost)
+      url.pathname = `${route}`
+    }
 
     if (query) {
       Object.entries(query).forEach(([key, value]) => {
@@ -37,18 +52,10 @@ class ZlcaClient {
 
   generateRestMethod(method) {
     return (route, init, rtOptions) => {
-      console.log({ init })
       const query = init && init.query
       const body = init && init.body
       const signal = init && init.signal
-
-      let parsedBody = ''
-
-      if (method !== 'get') {
-        parsedBody = {
-          ...(body || {}),
-        }
-      }
+      console.log({ body })
 
       return this.engine.request(
         Object.assign(
@@ -57,7 +64,7 @@ class ZlcaClient {
             method: method.toUpperCase(),
             signal,
           },
-          !!parsedBody && { data: parsedBody }
+          !!(method !== 'get') && { data: body }
         ),
         !!rtOptions ? rtOptions : {}
       )

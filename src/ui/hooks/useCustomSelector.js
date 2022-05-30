@@ -19,6 +19,6 @@ export const useCustomSelector = (selector, equalityFn = refEquality) => {
     return () => {
       unSubscribe()
     }
-  }, [])
+  }, [value])
   return value
 }

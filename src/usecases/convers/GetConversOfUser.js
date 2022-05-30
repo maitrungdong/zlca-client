@@ -1,16 +1,20 @@
+import conversRepository from 'data/repositories/ConversRepository.js'
+
 class GetConversOfUser {
   _conversRepo = null
   constructor(conversRepo) {
     this._conversRepo = conversRepo
   }
 
-  async invoke(userId) {
+  async invoke(data, options = { shouldNotify: false }) {
     try {
-      return await this._conversRepo.getConversOfUser(userId)
+      return await this._conversRepo.getConversOfUser(data.userId)
     } catch (err) {
       throw err
     }
   }
 }
 
-export default GetConversOfUser
+const getConversOfUser = new GetConversOfUser(conversRepository)
+
+export default getConversOfUser

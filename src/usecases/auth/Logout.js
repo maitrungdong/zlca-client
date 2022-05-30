@@ -1,21 +1,27 @@
-import SocketClient from 'socket/socketClient.js'
-
-class Logout {
+import authRepository from 'data/repositories/AuthRepository.js'
+import ObservableUseCase from 'usecases/ObservableUseCase.js'
+class Logout extends ObservableUseCase {
   _authRepo = null
   constructor(authRepo) {
+    super()
+
     this._authRepo = authRepo
   }
 
-  async invoke(userId) {
+  async invoke(data, options = { shouldNotify: true }) {
     try {
-      console.log({ LogoutUserId: userId })
-      await this._authRepo.logout(userId)
-
-      SocketClient.disconnect()
+      await this._authRepo.logout(data.userId)
+      if (options.shouldNotify) {
+        this.notifyListeners({
+          userId: data,
+        })
+      }
     } catch (err) {
       throw err
     }
   }
 }
 
-export default Logout
+const logoutUseCase = new Logout(authRepository)
+
+export default logoutUseCase

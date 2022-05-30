@@ -19,6 +19,24 @@ class ConversRepository {
       throw err
     }
   }
+
+  async chatWithUser(members) {
+    try {
+      const res = await conversAPIDataSource.chatWithUser(members)
+      return res
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async saveArrivalConver(arrivalConver) {
+    try {
+      //TODO: save arrivalConver to client-side db or something else.
+      console.log({ arrivalConver })
+    } catch (err) {
+      throw err
+    }
+  }
 }
 
 const conversRepository = new ConversRepository()
