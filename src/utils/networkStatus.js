@@ -83,7 +83,9 @@
           const timeoutId = setTimeout(() => timeoutCtrl.abort(), timeout)
 
           const fetcher = fetch(url, { mode: 'no-cors' })
-          fetcher.finally(() => timeoutId && clearTimeout(timeoutId))
+          fetcher
+            .catch((_) => {})
+            .finally(() => timeoutId && clearTimeout(timeoutId))
 
           return fetcher
         })
@@ -93,11 +95,13 @@
     }
 
     _startPing() {
+      // if (this._pingId) return
+      // console.log('pingId: ', this._pingId)
+
       const { interval } = this._options
 
       this._pingId = setInterval(() => {
         const { urls, timeout } = this._options
-
         this._ping({ urls, timeout }).then((online) => {
           if (online) {
             if (!this._isOnline) {
@@ -113,7 +117,6 @@
               this._startPing()
             }
           } else {
-            console.log('Promise.any is rejected!')
             if (this._isOnline) {
               this._isOnline = false
 

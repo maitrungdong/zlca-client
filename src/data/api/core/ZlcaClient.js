@@ -64,6 +64,8 @@ class ZlcaClient {
         rtOptions,
       })
 
+      console.log('Pending requests: ', this.pendingRequests)
+
       const response = this.engine.request(
         Object.assign(
           {
@@ -75,6 +77,8 @@ class ZlcaClient {
         ),
         !!rtOptions ? rtOptions : {}
       )
+
+      console.log(response)
 
       return response
     }
