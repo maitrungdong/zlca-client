@@ -5,6 +5,8 @@ import MessageList from 'ui/features/messages/list/MessageList'
 import CurrentConverFooter from './components/CurrentConverFooter'
 
 import useCurrentConverVM from './CurrentConverVM.js'
+import NoInternetBar from './components/NoInternetBar'
+import Offline from 'ui/features/common/networkDetect/Offline'
 
 const CurrentConver = () => {
   const {
@@ -26,6 +28,9 @@ const CurrentConver = () => {
         avatar={currentConver.avatar}
         lastActivity={currentConver.lastActivity}
       />
+      <Offline>
+        <NoInternetBar />
+      </Offline>
       <div
         className={`current-conver-body ${hasImgsPreview ? 'down-height' : ''}`}
       >

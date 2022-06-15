@@ -12,7 +12,7 @@ class AxiosEngine {
 
   NETWORK_ERROR = {
     statusCode: 999,
-    contentType: 'text/plain',
+    contentType: 'application/json',
     body: {
       success: false,
       data: null,
@@ -44,26 +44,19 @@ class AxiosEngine {
 
   /**
    *
-   * @param {object} rqInit chứa các cấu hình của một request.
-   * @param {object} rtOptions chứa cấu hình của retry strategy.
+   * @param {object} rqInit cấu hình của một request.
+   * @param {object} rtOptions cấu hình của retry strategy.
    * @returns một response hoặc throw error
    */
   request = async (rqInit, rtOptions) => {
     const { url, signal, ...rqInitParams } = rqInit
 
     const retryOptions = {
-      maxRetries: rtOptions.maxRetries
-        ? rtOptions.maxRetries
-        : this.options.maxRetries,
-      shouldRetry: rtOptions.shouldRetry
-        ? rtOptions.shouldRetry
-        : this.options.shouldRetry,
-      msBackoff: rtOptions.msBackoff
-        ? rtOptions.msBackoff
-        : this.options.msBackoff,
-      retryableErrors: rtOptions.retryableErrors
-        ? rtOptions.retryableErrors
-        : this.options.retryableErrors,
+      maxRetries: rtOptions.maxRetries || this.options.maxRetries,
+      shouldRetry: rtOptions.shouldRetry || this.options.shouldRetry,
+      msBackoff: rtOptions.msBackoff || this.options.msBackoff,
+      retryableErrors:
+        rtOptions.retryableErrors || this.options.retryableErrors,
     }
 
     const requestInit = {
@@ -96,13 +89,14 @@ class AxiosEngine {
   _tryRequest = async (request) => {
     let response = null
     try {
+      // debugger
       response = await axios.request(request)
-
       return {
         statusCode: response.status,
         body: response.data,
       }
     } catch (err) {
+      // debugger
       console.log(JSON.stringify(err, null, 4))
       return this.NETWORK_ERROR
     }
@@ -122,14 +116,15 @@ class AxiosEngine {
       retryableErrors
     )
     const response = this._standardResponse(await this._tryRequest(request))
-    if (response.success) {
-      return response
-    } else if (
+    // debugger
+    if (
+      !response.success &&
+      !request?.signal?.aborted &&
       retries > 0 &&
-      retryableErrors.includes(response.statusCode) &&
-      !request.signal.aborted
+      retryableErrors.includes(response.statusCode)
     ) {
       await delay(msBackoff)
+
       return this._requestWithRetries(
         request,
         retries - 1,
@@ -142,11 +137,12 @@ class AxiosEngine {
   }
 
   _standardResponse = ({ statusCode, body }) => {
+    // debugger
     const data = body
     let error = null
 
     if (statusCode < 200 || statusCode >= 300) {
-      if (!data.success) {
+      if (data?.success === false) {
         error = this._createError(statusCode, data.message)
       } else {
         error = this._createError(statusCode, data)
@@ -169,7 +165,6 @@ class AxiosEngine {
   }
 
   _createError(statusCode, message) {
-    //[ISSUE]: Chỗ này ta sẽ chuẩn hoá từng message để hiển thị lên trên giao diện:
     const error = new Error(`API Error: ${message}`)
 
     error.success = false

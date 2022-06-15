@@ -22,11 +22,8 @@ const SocketClient = (function () {
   return {
     init: (listeners = []) => {
       if (!socketInstance) {
-        console.log('CREATING SOCKET INSTANCE...')
         socketInstance = createInstance()
-        console.log('CREATED SOCKET INSTANCE...', socketInstance)
 
-        console.log({ listeners })
         //TODO: Đăng kí các listener{event, callback} cho socketInstance.
         listeners.forEach((listener) => {
           socketInstance.on(listener.event, listener.callback)

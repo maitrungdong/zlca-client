@@ -1,4 +1,3 @@
-import networkStatus from 'utils/networkStatus.js'
 import { toast } from 'react-toastify'
 import { useEffect } from 'react'
 
@@ -30,12 +29,17 @@ const useNotifNetworkStatus = () => {
       })
     }
 
-    networkStatus.addEventListener('online', notifyOnlineNetwork)
-    networkStatus.addEventListener('offline', notifyOfflineNetwork)
+    const changeNetworkHandler = (isOnline) => {
+      isOnline ? notifyOnlineNetwork() : notifyOfflineNetwork()
+    }
+
+    window.ZlcaDetectNetwork.addEventListener('change', changeNetworkHandler)
 
     return () => {
-      networkStatus.removeListener('online', notifyOnlineNetwork)
-      networkStatus.removeListener('offline', notifyOfflineNetwork)
+      window.ZlcaDetectNetwork.removeEventListener(
+        'change',
+        changeNetworkHandler
+      )
     }
   }, [])
 }
