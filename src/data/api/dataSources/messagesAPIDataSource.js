@@ -1,11 +1,16 @@
 import ZlcaClient from '../core/ZlcaClient.js'
 
 const messagesAPIDataSource = {
+  controller: null,
   getMessagesOfConver: async (converId) => {
     try {
-      let controller = new AbortController()
+      if (messagesAPIDataSource.controller !== null) {
+        messagesAPIDataSource.controller.abort()
+      }
+
+      messagesAPIDataSource.controller = new AbortController()
       const reqInit = {
-        signal: controller.signal,
+        signal: messagesAPIDataSource.controller.signal,
         query: {
           converId,
         },
@@ -21,6 +26,8 @@ const messagesAPIDataSource = {
       //   }
       //   console.log('Canceled!')
       // }, 10000)
+
+      ZlcaClient.get('/api/messages', reqInit, retryOptions)
 
       const res = await ZlcaClient.get(`/api/messages`, reqInit, retryOptions)
 

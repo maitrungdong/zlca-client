@@ -4,7 +4,7 @@
     _options = {
       urls: ['https://www.google.com', 'https://www.microsoft.com'],
       timeout: 3000,
-      interval: 10000,
+      interval: 5000,
     }
     _onlineListeners = []
     _offlineListeners = []
@@ -21,8 +21,78 @@
         this._options.interval = options.interval
       }
 
-      //TODO: start ping to servers to check internet.
-      this._startPing()
+      this._init()
+    }
+
+    _init() {
+      window.addEventListener('online', () => {
+        console.log('Online')
+        this._startPing('online')
+      })
+
+      window.addEventListener('offline', (e) => {
+        console.log('Offline')
+        this._isOnline = false
+
+        this._offlineListeners.forEach((listener) => listener())
+        this._onChangeListeners.forEach((listener) => listener(false))
+      })
+    }
+
+    _ping({ urls, timeout }) {
+      return new Promise((resolve) => {
+        const isOnline = () => resolve(true)
+        const isOffline = () => resolve(false)
+
+        const fetchs = urls.map((url) => {
+          const timeoutCtrl = new AbortController()
+          const timeoutId = setTimeout(() => timeoutCtrl.abort(), timeout)
+
+          const fetcher = fetch(url, { mode: 'no-cors', signal: timeoutCtrl })
+          fetcher
+            .catch((_) => {})
+            .finally(() => timeoutId && clearTimeout(timeoutId))
+
+          return fetcher
+        })
+
+        Promise.any(fetchs).then(isOnline).catch(isOffline)
+      })
+    }
+
+    _startPing(statusToCheck) {
+      const { interval } = this._options
+
+      this._pingId = setInterval(() => {
+        const { urls, timeout } = this._options
+        this._ping({ urls, timeout }).then((online) => {
+          if (online && statusToCheck === 'online') {
+            if (!this._isOnline) {
+              this._isOnline = true
+
+              this._onlineListeners.forEach((listener) => listener())
+              this._onChangeListeners.forEach((listener) => listener(true))
+
+              this._stopPing()
+            }
+          } else if (!online && statusToCheck === 'offline') {
+            if (this._isOnline) {
+              this._isOnline = false
+
+              this._offlineListeners.forEach((listener) => listener())
+              this._onChangeListeners.forEach((listener) => listener(false))
+
+              this._stopPing()
+            }
+          }
+        })
+      }, interval)
+    }
+
+    _stopPing() {
+      if (this._pingId) {
+        clearInterval(this._pingId)
+      }
     }
 
     addEventListener(event, listener) {
@@ -68,73 +138,6 @@
         default: {
           break
         }
-      }
-    }
-
-    _ping({ urls, timeout }) {
-      return new Promise((resolve) => {
-        const isOnline = () => resolve(true)
-        const isOffline = () => resolve(false)
-
-        const fetchs = urls.map((url) => {
-          const timeoutCtrl = new AbortController()
-          const timeoutId = setTimeout(() => timeoutCtrl.abort(), timeout)
-
-          const fetcher = fetch(url, {
-            mode: 'no-cors',
-            signal: timeoutCtrl.signal,
-          })
-          fetcher
-            .catch((_) => {})
-            .finally(() => timeoutId && clearTimeout(timeoutId))
-
-          return fetcher
-        })
-
-        Promise.any(fetchs).then(isOnline).catch(isOffline)
-      })
-    }
-
-    _startPing() {
-      const { interval } = this._options
-
-      this._pingId = setInterval(() => {
-        const { urls, timeout } = this._options
-        this._ping({ urls, timeout }).then((online) => {
-          if (online) {
-            if (!this._isOnline) {
-              this._isOnline = true
-
-              //TODO: notify that network status is online
-              this._onlineListeners.forEach((listener) => listener())
-              this._onChangeListeners.forEach((listener) => listener(true))
-
-              //TODO: reset ping more slowly.
-              this._options.interval = 10000
-              this._stopPing()
-              this._startPing()
-            }
-          } else {
-            if (this._isOnline) {
-              this._isOnline = false
-
-              //TODO: notify that network status is offline
-              this._offlineListeners.forEach((listener) => listener())
-              this._onChangeListeners.forEach((listener) => listener(false))
-
-              //TODO: reset ping more quickly.
-              this._options.interval = 3000
-              this._stopPing()
-              this._startPing()
-            }
-          }
-        })
-      }, interval)
-    }
-
-    _stopPing() {
-      if (this._pingId) {
-        clearInterval(this._pingId)
       }
     }
   }

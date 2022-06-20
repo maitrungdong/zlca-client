@@ -1,15 +1,7 @@
 import axios from 'axios'
-import delay from './delay.js'
+import delay from './helpers/delay.js'
 
 class AxiosEngine {
-  //Default options setting:
-  options = {
-    maxRetries: 5,
-    msBackoff: 100,
-    shouldRetry: true,
-    retryableErrors: [408, 500, 502, 503, 504],
-  }
-
   NETWORK_ERROR = {
     statusCode: 999,
     contentType: 'application/json',
@@ -20,124 +12,76 @@ class AxiosEngine {
     },
   }
 
-  constructor(options = {}) {
-    this._configOptions(options)
-  }
-
-  _configOptions = (options = {}) => {
-    if (typeof options.maxRetries === 'number') {
-      this.options.maxRetries = options.maxRetries
-    }
-
-    if (typeof options.shouldRetry === 'boolean') {
-      this.options.shouldRetry = options.shouldRetry
-    }
-
-    if (typeof options.msBackoff === 'number') {
-      this.options.msBackoff = options.msBackoff
-    }
-
-    if (Array.isArray(options.retryableErrors)) {
-      this.options.retryableErrors = [...options.retryableErrors]
-    }
-  }
-
   /**
+   * Peform a request with requestInit, retryOptions args.
    *
-   * @param {object} rqInit cấu hình của một request.
-   * @param {object} rtOptions cấu hình của retry strategy.
+   * @param {object} rqInit request config
+   * @param {object} retrySchemas retry schemas
    * @returns một response hoặc throw error
    */
-  request = async (rqInit, rtOptions) => {
-    const { url, signal, ...rqInitParams } = rqInit
+  request = async (request, retrySchemas) => {
+    //TODO: performs a first request.
+    let response = this._standardResponse(await this._tryRequest(request))
+    if (response.success) return response
+    if (!retrySchemas) throw response
 
-    const retryOptions = {
-      maxRetries: rtOptions.maxRetries || this.options.maxRetries,
-      shouldRetry: rtOptions.shouldRetry || this.options.shouldRetry,
-      msBackoff: rtOptions.msBackoff || this.options.msBackoff,
-      retryableErrors:
-        rtOptions.retryableErrors || this.options.retryableErrors,
-    }
+    //Nếu như có retry schema thì mình sẽ bắt đầu thực hiện retry!
+    const usedRetrySchema = Array.isArray(retrySchemas)
+      ? {
+          ...retrySchemas.find((rtSchm) =>
+            rtSchm.errorCodes.includes(response.statusCode)
+          ),
+        }
+      : { ...retrySchemas }
 
-    const requestInit = {
-      ...rqInitParams,
-      signal,
-      headers: {
-        ...(rqInitParams.headers || {}),
-      },
-    }
+    response = await this._requestWithRetries(request, usedRetrySchema)
 
-    const request = {
-      url: url.toString(),
-      ...requestInit,
-    }
-
-    const response = await this._requestWithRetries(
-      request,
-      retryOptions.shouldRetry ? retryOptions.maxRetries : 0,
-      retryOptions.msBackoff,
-      retryOptions.retryableErrors
-    )
-
-    if (response.success) {
-      return response
-    } else {
-      throw response
-    }
+    if (response.success) return response
+    throw response
   }
 
   _tryRequest = async (request) => {
     let response = null
     try {
-      // debugger
       response = await axios.request(request)
       return {
         statusCode: response.status,
         body: response.data,
       }
     } catch (err) {
-      // debugger
       console.log(JSON.stringify(err, null, 4))
       return this.NETWORK_ERROR
     }
   }
 
-  _requestWithRetries = async (
-    request,
-    retries,
-    msBackoff,
-    retryableErrors
-  ) => {
-    console.log(
-      '_requestWithRetries',
-      request,
-      retries,
-      msBackoff,
-      retryableErrors
-    )
-    const response = this._standardResponse(await this._tryRequest(request))
-    // debugger
-    if (
-      !response.success &&
-      !request?.signal?.aborted &&
-      retries > 0 &&
-      retryableErrors.includes(response.statusCode)
-    ) {
-      await delay(msBackoff)
+  _requestWithRetries = async (request, usedRetrySchema) => {
+    const stack = []
+    stack.push(usedRetrySchema)
 
-      return this._requestWithRetries(
-        request,
-        retries - 1,
-        msBackoff * 2,
-        retryableErrors
-      )
-    } else {
-      return response
+    while (stack.length > 0) {
+      const retrySchema = stack.pop()
+
+      const response = this._standardResponse(await this._tryRequest(request))
+      if (
+        !response.success &&
+        !request.signal.aborted &&
+        retrySchema.maxRetries > 0 &&
+        retrySchema.errorCodes.includes(response.statusCode)
+      ) {
+        await delay(retrySchema.msBackoff)
+
+        stack.push({
+          ...retrySchema,
+          maxRetries: --retrySchema.maxRetries,
+          msBackoff: 2 * retrySchema.msBackoff,
+        })
+      } else {
+        return response
+      }
     }
   }
 
   _standardResponse = ({ statusCode, body }) => {
-    // debugger
     const data = body
     let error = null
 

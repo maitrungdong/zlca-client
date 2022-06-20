@@ -20,7 +20,6 @@ const CurrentConverVM = () => {
   const msgImages = useRef([])
 
   const sendMessage = async () => {
-    //debugger
     if (
       !isSending &&
       (msgTextContent.trim() !== '' || msgImages.current?.length > 0)
@@ -31,11 +30,12 @@ const CurrentConverVM = () => {
         textContent: msgTextContent,
         images: msgImages.current,
       }
-      await messagesManager.saveNewMessage(newMessage)
 
       setMsgTextContent('')
       setImgURLsPreview([])
       msgImages.current = []
+
+      await messagesManager.saveNewMessage(newMessage)
     }
   }
 
