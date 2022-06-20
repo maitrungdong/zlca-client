@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { useMe } from 'ui/hooks'
-import useNavMenuVM from './navigationMenuVM'
+import useNavMenuVM from './NavigationMenuVM'
 
 const NavigationMenu = () => {
   const [showUserMenu, setShowUserMenu] = useState(false)

@@ -1,11 +1,12 @@
 import conversStore from 'stores/ConversationsStore.js'
 import authStore from 'stores/AuthStore.js'
-import GetConversOfUser from 'usecases/convers/GetConversOfUser.js'
+
+import getConversOfUserUseCase from 'usecases/convers/GetConversOfUser.js'
+import chatWithUserUseCase from 'usecases/convers/ChatWithUser.js'
+import saveArrivalConverUseCase from 'usecases/convers/SaveArrivalConver.js'
 
 import messagesManager from './MessagesManager.js'
 import { messageType } from 'utils/constants.js'
-
-import conversRepository from 'data/repositories/ConversRepository.js'
 
 class ConversManager {
   //[TODO]: Chuẩn hóa business data lấy từ Repo thành data cho UI.
@@ -24,7 +25,7 @@ class ConversManager {
 
     return {
       id: conver.id,
-      avatar: conver.avatar,
+      avatar: friend.avatar,
       title: converTitle,
       isCurrentConver: conver.id === currentConverId,
       members: conver.members,
@@ -63,8 +64,7 @@ class ConversManager {
     try {
       conversStore.getConversOfUserLoading()
 
-      const uc = new GetConversOfUser(conversRepository)
-      const res = await uc.invoke(userId)
+      const res = await getConversOfUserUseCase.invoke({ userId })
 
       //[TODO]: Chuẩn hóa data.
       const convers = (res || []).map((c) => {
@@ -74,6 +74,7 @@ class ConversManager {
       //[TODO]: Data đã được chuẩn hóa vào trong redux store.
       conversStore.saveConversOfUserToStore(convers)
     } catch (err) {
+      console.log({ err })
       conversStore.getConversOfUserFailed(err.message)
     }
   }
@@ -114,7 +115,43 @@ class ConversManager {
       conversStore.updateConver(clonedConver)
     }
   }
+
+  async chatWithUser(user) {
+    try {
+      const me = authStore.getMe()
+      //TODO: Gửi lên server để hoặc tạo một conversation mới hoặc trả về conversation đó!
+      const res = await chatWithUserUseCase.invoke(
+        { members: [me, user], receiverId: user.id },
+        { shouldNotify: true }
+      )
+
+      if (res.isOld) {
+        this.switchCurrentConver(res.conver.id)
+      } else {
+        //TODO: Thêm vào cuối danh sách conversation mới (nếu có).
+        //TODO: Switch sang conversation đó.
+        this.saveNewConver(res.conver)
+        this.switchCurrentConver(res.conver.id)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  async saveNewConver(conver) {
+    const standardedConver = this.standardConver(conver)
+    conversStore.saveNewConver(standardedConver)
+  }
+
+  async saveArrivalConver({ arrivalConver }) {
+    const standardedConver = this.standardConver(arrivalConver)
+    conversStore.saveArrivalConver(standardedConver)
+  }
 }
 
 const conversManager = new ConversManager()
+saveArrivalConverUseCase.addListener(
+  conversManager.saveArrivalConver.bind(conversManager)
+)
+
 export default conversManager

@@ -53,6 +53,14 @@
 
     &__main {
       padding-bottom: 0.4rem;
+
+      .images-gr {
+        display: flex;
+        gap: 0.8rem;
+        img {
+          height: 20rem;
+        }
+      }
     }
 
     &__bottom {

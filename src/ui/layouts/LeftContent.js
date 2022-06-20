@@ -5,7 +5,7 @@ import ConversationList from '../features/conversations/list/ConversationList'
 import NotificationList from '../features/notifications/NotificationList'
 import SearchBar from '../features/search/SearchBar'
 
-const LeftContent = (props) => {
+const LeftContent = () => {
   const location = useLocation()
 
   const [currentTab, setCurrentTab] = useState('')

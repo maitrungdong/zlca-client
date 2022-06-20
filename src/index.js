@@ -1,11 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-
 import { BrowserRouter } from 'react-router-dom'
-
 import App from './ui/App'
 
-import 'bulma/css/bulma.min.css'
+import 'utils/networkStatus.js'
+
 import 'ui/styles/index.scss'
 
 ReactDOM.render(

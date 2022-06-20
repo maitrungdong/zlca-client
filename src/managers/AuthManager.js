@@ -1,19 +1,17 @@
 import authStore from 'stores/AuthStore.js'
 
-import Login from 'usecases/auth/Login.js'
-import Logout from 'usecases/auth/Logout'
-import Register from 'usecases/auth/Register'
-
-import authRepository from 'data/repositories/AuthRepository'
+import loginUseCase from 'usecases/auth/Login.js'
+import logoutUseCase from 'usecases/auth/Logout.js'
+import registerUseCase from 'usecases/auth/Register.js'
 
 class AuthManager {
   async login(userInfo) {
     try {
       authStore.loginLoading()
-      //[TODO]: sử dụng loginUseCase để thực hiện login.
-      const uc = new Login(authRepository)
-      const res = await uc.invoke(userInfo)
-
+      const res = await loginUseCase.invoke(
+        { userInfo },
+        { shouldNotify: true }
+      )
       /** [NOTE]: Tại sao e lại đem việc xử lý thông báo lỗi lên đây?
        * Bởi vì, theo như e thấy thì việc xử lý thông báo lỗi. Nó là của
        * UI. (Nó gần với UI hơn). Nếu như để việc xử lý thông báo lỗi ở
@@ -27,7 +25,6 @@ class AuthManager {
        * sẽ trả kết quá (lỗi) về cho Repo và Repo lại throw cái lỗi này cho các tầng ở phía
        * trên xử lý.
        */
-
       authStore.loginSuccess(res)
     } catch (err) {
       authStore.loginFailed(err.message)
@@ -36,9 +33,7 @@ class AuthManager {
 
   async logout(userId) {
     try {
-      const uc = new Logout(authRepository)
-      await uc.invoke(userId)
-
+      await logoutUseCase.invoke({ userId }, { shouldNotify: true })
       authStore.logoutSuccess()
     } catch (err) {}
   }
@@ -46,10 +41,10 @@ class AuthManager {
   async register(userInfo) {
     try {
       authStore.registerLoading()
-
-      const uc = new Register(authRepository)
-      const res = await uc.invoke(userInfo)
-
+      const res = await registerUseCase.invoke(
+        { userInfo },
+        { shouldNotify: true }
+      )
       authStore.registerSuccess(res)
     } catch (err) {
       authStore.registerFailed(err.message)
