@@ -1,7 +1,6 @@
 import ZlcaClient from '../core/ZlcaClient.js'
 
 const conversAPIDataSource = {
-  pendingResult = null
   getConversOfUser: async (userId) => {
     const retrySchemas = [
       {
@@ -26,77 +25,38 @@ const conversAPIDataSource = {
         userId,
       },
       isAbortable: true,
+      shouldHold: true,
+      waitNetworkTime: 'infinite', // inifinite || 3600 seconds
       retrySchemas,
     }
 
-    try {
-      this.pendingResult = ZlcaClient.get(`/api/conversations`, request)
+    const pendingResult = ZlcaClient.get(`/api/conversations`, request)
 
-      if(this.pendingResult){
-      pendingResult.abort()
-        
-      }
-
-      pendingResult.abort()
-
-      pendingResult.then((res) => {
-        console.log('>>>Resolved result: ', res)
-      })
-
-      pendingResult.catch((err) => {
-        console.log('>>>Rejected result: ', err)
-      })
-
-      console.log(pendingResult)
-      // debugger
-
-      // if (res.success) {
-      //   return res.data
-      // } else {
-      //   throw new Error(res.message)
-      // }
-    } catch (err) {
-      console.log({ err })
-      throw err
-    }
+    const res = await pendingResult
+    console.log('>>>Resolved result: ', res)
+    return res.data
   },
   getConverById: async (converId) => {
-    try {
-      const res = await ZlcaClient.get(`/api/conversations/${converId}`)
-      if (res.success) {
-        return res.data
-      } else {
-        throw new Error(res.message)
-      }
-    } catch (err) {
-      throw err
-    }
+    const res = await ZlcaClient.get(`/api/conversations/${converId}`)
+    return res.data
   },
 
   async chatWithUser(members) {
-    try {
-      const reqInit = {
-        body: {
-          members,
-        },
-      }
-      const retryOptions = {
-        maxRetries: 1,
-      }
-      const res = await ZlcaClient.post(
-        '/api/conversations/chat-with-user',
-        reqInit,
-        retryOptions
-      )
-
-      if (res.success) {
-        return res.data
-      } else {
-        throw new Error(res.message)
-      }
-    } catch (err) {
-      throw err
+    const reqInit = {
+      body: {
+        members,
+      },
     }
+    const retryOptions = {
+      maxRetries: 1,
+    }
+    const res = await ZlcaClient.post(
+      '/api/conversations/chat-with-user',
+      reqInit,
+      retryOptions
+    )
+
+    return res.data
   },
 }
 

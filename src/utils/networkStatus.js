@@ -139,6 +139,8 @@
     }
   }
 
-  const detectNetwork = new DetectNetwork()
-  window.ZlcaDetectNetwork = detectNetwork
+  if (!window.ZlcaDetectNetwork) {
+    const detectNetwork = new DetectNetwork()
+    window.ZlcaDetectNetwork = detectNetwork
+  }
 })()

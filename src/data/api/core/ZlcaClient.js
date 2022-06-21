@@ -1,8 +1,9 @@
-import AxiosEngine from './AxiosEngine.js'
+import axiosEngine from './AxiosEngine.js'
 import AbortablePendingRequest from './helpers/Types/AbortableRequestPromise.js'
+import 'utils/networkStatus.js'
 
 const BASE_API_URL = 'http://localhost:8080'
-
+const NETWORK_ERROR_CODE = 999
 class ZlcaClient {
   //Default retrySchema setting:
   _defaultRetrySchema = {
@@ -27,19 +28,29 @@ class ZlcaClient {
   _engine = null
 
   _isOnline = null
-  _pendingRequests = []
+  _heldRequests = []
 
-  constructor(retrySchema = {}, requestOptions = {}) {
+  constructor(axiosEngine, retrySchema = {}, requestOptions = {}) {
     this._isOnline = true
-    this._engine = new AxiosEngine()
+    this._engine = axiosEngine
 
     this._configRequestOptions(requestOptions)
-    this._configRetryOptions(retrySchema)
+    this._configRetrySchema(retrySchema)
 
     this.post = this._generateRestMethod('post').bind(this)
     this.get = this._generateRestMethod('get').bind(this)
     this.put = this._generateRestMethod('put').bind(this)
     this.delete = this._generateRestMethod('delete').bind(this)
+
+    //TODO: add event listener to detect network status
+    window.ZlcaDetectNetwork.addEventListener('online', () => {
+      console.log('ZlcaClient is online')
+      this._isOnline = true
+    })
+    window.ZlcaDetectNetwork.addEventListener('offline', () => {
+      console.log('ZlcaClient is offline')
+      this._isOnline = false
+    })
   }
 
   _configRequestOptions = (options = {}) => {
@@ -68,20 +79,23 @@ class ZlcaClient {
 
   _generateRestMethod(method) {
     /**
-     * This should be roles: rest methods
+     * This should be roles: rest methods.
      * @param {string} route absolute url or relative url
      * @param {object} requestInit request object to request
      * @param {array|string} retrySchms retrySchemas for each response. If string -> defaultRetrySchema
      * @returns abortablePendingRequest
      */
-    return (route, requestInit, retrySchms) => {
-      const query = requestInit && requestInit.query
-      const body = requestInit && requestInit.body
-      const isAbortable = requestInit && requestInit.isAbortable
-      const headers = requestInit && {
+    return (route, requestInit) => {
+      const query = requestInit?.query
+      const body = requestInit?.body
+      const isAbortable = requestInit?.isAbortable
+      const headers = {
         ...this._requestOptions.headers,
-        ...requestInit.headers,
+        ...requestInit?.headers,
       }
+      const shouldHold = requestInit?.shouldHold
+      const waitNetworkTime = requestInit?.waitNetworkTime
+      const retrySchms = requestInit?.retrySchemas
 
       const abortCtrl = isAbortable ? new AbortController() : null
       const request = Object.assign(
@@ -93,17 +107,18 @@ class ZlcaClient {
         isAbortable && { signal: abortCtrl.signal },
         method !== 'get' && { data: body }
       )
-
       let retrySchemas = null
-      if (!retrySchms) {
+      if (retrySchms) {
         retrySchemas =
-          typeof retrySchms === 'string' && retrySchms === 'default'
+          retrySchms === 'default'
             ? { ...this._defaultRetrySchema }
             : [...retrySchms]
       }
 
-      const pendingRequest = this.engine.request(request, retrySchemas)
-
+      const pendingRequest = this._engine.request(request, retrySchemas, {
+        shouldHold,
+        waitNetworkTime,
+      })
       return new AbortablePendingRequest(pendingRequest, abortCtrl)
     }
   }
@@ -137,5 +152,5 @@ class ZlcaClient {
   }
 }
 
-const zlcaClient = new ZlcaClient()
+const zlcaClient = new ZlcaClient(axiosEngine)
 export default zlcaClient

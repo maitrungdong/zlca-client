@@ -8,7 +8,6 @@ const CurrentConverVM = () => {
   const me = useMe()
   const currentConver = useCurrentConver()
   const isSending = useCustomSelector((state) => {
-    console.log({ isSendingMsg: state.messages.isSendingMsg })
     return state.messages.isSendingMsg
   })
 
