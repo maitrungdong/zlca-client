@@ -8,13 +8,15 @@ const usersAPIDataSource = {
         msBackoff: 1000,
       },
     ]
-    const request = {
-      params: {
-        search: keyword,
+    const requestSchema = {
+      requestConfig: {
+        params: {
+          search: keyword,
+        },
       },
       retrySchemas,
     }
-    const res = await ZlcaClient.get(`/api/users`, request)
+    const res = await ZlcaClient.get(`/api/users`, requestSchema)
     return res.data
   },
 }

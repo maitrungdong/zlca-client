@@ -21,8 +21,10 @@ const conversAPIDataSource = {
     ]
 
     const request = {
-      params: {
-        userId,
+      requestConfig: {
+        params: {
+          userId,
+        },
       },
       isAbortable: true,
       shouldHold: true,
@@ -42,18 +44,17 @@ const conversAPIDataSource = {
   },
 
   async chatWithUser(members) {
-    const reqInit = {
-      body: {
-        members,
+    const requestSchema = {
+      requestConfig: {
+        data: {
+          members,
+        },
       },
-    }
-    const retryOptions = {
-      maxRetries: 1,
+      retrySchemas: [{ maxRetries: 1, msBackoff: 1000, errorCodes: [400] }],
     }
     const res = await ZlcaClient.post(
       '/api/conversations/chat-with-user',
-      reqInit,
-      retryOptions
+      requestSchema
     )
 
     return res.data

@@ -10,23 +10,27 @@ const messagesAPIDataSource = {
       },
     ]
 
-    const request = {
-      params: {
-        converId,
+    const requestSchema = {
+      requestConfig: {
+        params: {
+          converId,
+        },
       },
       isAbortable: true,
       retrySchemas,
     }
 
-    const res = await ZlcaClient.get(`/api/messages`, request)
+    const res = await ZlcaClient.get(`/api/messages`, requestSchema)
     return res.data
   },
 
   saveNewMessage: async (newMessage) => {
     try {
       const res = await ZlcaClient.post(`/api/messages`, {
-        body: {
-          ...newMessage,
+        requestConfig: {
+          data: {
+            ...newMessage,
+          },
         },
       })
 
