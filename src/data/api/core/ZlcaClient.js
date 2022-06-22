@@ -1,5 +1,5 @@
 import axiosEngine from './AxiosEngine.js'
-import AbortablePendingRequest from './helpers/Types/AbortableRequestPromise.js'
+import AbortablePendingRequest from './helpers/Types/AbortablePendingRequest.js'
 import 'utils/networkStatus.js'
 import interceptor from './helpers/interceptor.js'
 

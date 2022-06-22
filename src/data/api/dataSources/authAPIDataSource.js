@@ -3,8 +3,10 @@ import ZlcaClient from '../core/ZlcaClient.js'
 const authAPIDataSource = {
   login: async (userInfo) => {
     const res = await ZlcaClient.post('/api/auth/sign-in', {
-      body: {
-        ...userInfo,
+      requestConfig: {
+        data: {
+          ...userInfo,
+        },
       },
     })
     return res.data
@@ -12,8 +14,10 @@ const authAPIDataSource = {
 
   register: async (userInfo) => {
     const res = await ZlcaClient.post('/api/auth/register', {
-      body: {
-        ...userInfo,
+      requestConfig: {
+        data: {
+          ...userInfo,
+        },
       },
     })
     return res.data
@@ -21,8 +25,10 @@ const authAPIDataSource = {
 
   logout: async (userId) => {
     const res = await ZlcaClient.post('/api/auth/sign-out', {
-      body: {
-        userId,
+      requestConfig: {
+        data: {
+          userId,
+        },
       },
     })
     return res.data

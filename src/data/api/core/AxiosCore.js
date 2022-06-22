@@ -7,7 +7,11 @@ class AxiosCore {
   _decryptor = null
 
   async request(request) {
-    return this._decryptor(this._logger(await axios.request(request)))
+    const response = await axios.request(request)
+    const decryptedRes = this._decryptor(response)
+    this._logger.log(request)(decryptedRes)
+
+    return decryptedRes
   }
 
   useLogger(logger) {
