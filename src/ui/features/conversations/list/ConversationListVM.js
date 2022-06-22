@@ -7,8 +7,6 @@ export default function ConversationListVM() {
   const convers = useConversOfCU()
   const me = useMe()
 
-  console.log({ convers })
-
   useEffect(() => {
     const getConversOfCU = async (userId) => {
       await conversManager.loadConversOfUser(userId)

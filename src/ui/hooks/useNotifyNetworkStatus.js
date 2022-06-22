@@ -29,8 +29,13 @@ const useNotifNetworkStatus = () => {
       })
     }
 
-    const changeNetworkHandler = (isOnline) => {
-      isOnline ? notifyOnlineNetwork() : notifyOfflineNetwork()
+    const changeNetworkHandler = (status) => {
+      if (status === 'online') {
+        notifyOfflineNetwork()
+      }
+      if (status === 'offline') {
+        notifyOfflineNetwork()
+      }
     }
 
     window.ZlcaDetectNetwork.addEventListener('change', changeNetworkHandler)
