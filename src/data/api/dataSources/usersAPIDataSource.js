@@ -9,7 +9,7 @@ const usersAPIDataSource = {
       },
     ]
     const request = {
-      query: {
+      params: {
         search: keyword,
       },
       retrySchemas,

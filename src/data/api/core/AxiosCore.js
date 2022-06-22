@@ -7,10 +7,10 @@ class AxiosCore {
   _decryptor = null
 
   async request(request) {
-    return this._decryptor(this._logger(axios.request(request)))
+    return this._decryptor(this._logger(await axios.request(request)))
   }
 
-  useLogger() {
+  useLogger(logger) {
     this._logger = logger
   }
 

@@ -11,7 +11,7 @@ const messagesAPIDataSource = {
     ]
 
     const request = {
-      query: {
+      params: {
         converId,
       },
       isAbortable: true,

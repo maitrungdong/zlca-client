@@ -21,7 +21,7 @@ const conversAPIDataSource = {
     ]
 
     const request = {
-      query: {
+      params: {
         userId,
       },
       isAbortable: true,
