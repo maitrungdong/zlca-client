@@ -24,16 +24,8 @@ class AxiosEngine {
     },
   }
 
-  _decryptor = null
-  _logger = null
   _waitRequestsManager = null
 
-  useDecryptor(decryptor) {
-    this._decryptor = decryptor
-  }
-  useLogger(logger) {
-    this._logger = logger
-  }
   useWaitRequestsManager(waitRequestsManager) {
     this._waitRequestsManager = waitRequestsManager
   }
@@ -103,7 +95,6 @@ class AxiosEngine {
         body: response.data,
       }
     } catch (err) {
-      console.log(JSON.stringify(err, null, 4))
       return this.NETWORK_ERROR
     }
   }

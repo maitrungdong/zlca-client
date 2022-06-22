@@ -13,20 +13,17 @@ class ZlcaClient {
   _defaultRetrySchema = {
     maxRetries: 3,
     msBackoff: 200,
-
-    //[ISSUE]: Tại sao mình cần phải retry lại các mã lỗi này...
-    //(Mình chỉ retry khi nào network bị lỗi - cần retry để cho chắc chắn,
-    //hoặc server bị nháy chập chờn, quá tải cần thử lại.)
-    //Chứ nếu nó trả về một lỗi thực sự rồi thì retry để làm gì?
-    //Ví dụ: nó trả 404 - not found, 400 - bad request,... thì request để làm gì?
-    //Ngoài ra, nếu server đang bị sập thực sự thì khi mình cứ retry thì nó sẽ
-    //làm cho sự cố trở nên trầm trọng hơn.
     errorCodes: [408, 500, 502, 503, 504], //Các mã lỗi cho cái retry schema này!
   }
 
   _requestOptions = {
-    baseApiURL: `${BASE_API_URL}`,
-    headers: {},
+    baseURL: `${BASE_API_URL}`,
+    headers: { 'Content-Type': 'application/json' },
+    timeout: 1000,
+    withCredentials: false,
+    responseType: 'json',
+    maxContentLength: 2000,
+    maxBodyLength: 2000,
   }
 
   _engine = null
@@ -79,29 +76,41 @@ class ZlcaClient {
   }
 
   _generateRestMethod(method) {
-    return (route, requestInit) => {
-      const query = requestInit?.query
-      const body = requestInit?.body
-      const isAbortable = requestInit?.isAbortable
-      const headers = {
+    return (route, requestSchema = {}) => {
+      const {
+        requestConfig,
+        isAbortable,
+        shouldHold,
+        waitNetworkTime,
+        retrySchemas: retrySchms,
+      } = requestSchema
+      let { headers, params, data, ...restRequestConfig } = requestConfig || {}
+
+      headers = {
         ...this._requestOptions.headers,
-        ...requestInit?.headers,
+        ...headers,
       }
-      const shouldHold = requestInit?.shouldHold
-      const waitNetworkTime = requestInit?.waitNetworkTime
-      const retrySchms = requestInit?.retrySchemas
+
+      restRequestConfig = {
+        ...this._requestOptions,
+        ...restRequestConfig,
+      }
+
+      delete restRequestConfig.baseURL
+      delete restRequestConfig.headers
 
       const abortCtrl = isAbortable ? new AbortController() : null
-      const url = this._getAPIUrl(route, query).toString()
+      const url = this._getAPIUrl(route, params).toString()
 
       const request = Object.assign(
         {
-          url: url,
-          headers: headers,
+          url,
+          headers,
           method: method.toUpperCase(),
+          ...restRequestConfig,
         },
         isAbortable && { signal: abortCtrl.signal },
-        method !== 'get' && { data: body }
+        method !== 'get' && { data }
       )
 
       //TODO: check if it's in blacklist.
@@ -120,13 +129,17 @@ class ZlcaClient {
         shouldHold,
         waitNetworkTime,
       })
-      const pendingRequest = this._interceptor.interceptResponse(response)
 
-      return new AbortablePendingRequest(pendingRequest, abortCtrl)
+      const pendingResponse = this._interceptor.interceptResponse(response)
+      if (isAbortable) {
+        return new AbortablePendingRequest(pendingResponse, abortCtrl)
+      } else {
+        return pendingResponse
+      }
     }
   }
 
-  _getAPIUrl(route, query) {
+  _getAPIUrl(route, params) {
     //TODO: check if route is absolute url
     let url = null
     if (this._isAbsoluteURL(route)) {
@@ -136,8 +149,8 @@ class ZlcaClient {
       url.pathname = `${route}`
     }
 
-    if (query) {
-      Object.entries(query).forEach(([key, value]) => {
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined) {
           url.searchParams.set(key, value.toString())
         }
