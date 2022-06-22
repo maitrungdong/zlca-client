@@ -1,8 +1,13 @@
-import AxiosEngine from './AxiosEngine.js'
+import axiosEngine from './AxiosEngine.js'
 import AbortablePendingRequest from './helpers/Types/AbortableRequestPromise.js'
+import 'utils/networkStatus.js'
+import interceptor from './helpers/interceptor.js'
 
 const BASE_API_URL = 'http://localhost:8080'
-
+/**
+ * Prepare configs and set up default configs
+ * Intercept requests before pass them to AxiosEngine
+ */
 class ZlcaClient {
   //Default retrySchema setting:
   _defaultRetrySchema = {
@@ -25,21 +30,28 @@ class ZlcaClient {
   }
 
   _engine = null
-
-  _isOnline = null
-  _pendingRequests = []
+  _interceptor = null
 
   constructor(retrySchema = {}, requestOptions = {}) {
-    this._isOnline = true
-    this._engine = new AxiosEngine()
-
     this._configRequestOptions(requestOptions)
-    this._configRetryOptions(retrySchema)
+    this._configRetrySchema(retrySchema)
 
     this.post = this._generateRestMethod('post').bind(this)
     this.get = this._generateRestMethod('get').bind(this)
     this.put = this._generateRestMethod('put').bind(this)
     this.delete = this._generateRestMethod('delete').bind(this)
+  }
+
+  useInterceptor(interceptor) {
+    if (typeof interceptor === 'object') {
+      this._interceptor = interceptor
+    }
+  }
+
+  useAxiosEngine(engine) {
+    if (typeof engine === 'object') {
+      this._engine = engine
+    }
   }
 
   _configRequestOptions = (options = {}) => {
@@ -67,26 +79,24 @@ class ZlcaClient {
   }
 
   _generateRestMethod(method) {
-    /**
-     * This should be roles: rest methods
-     * @param {string} route absolute url or relative url
-     * @param {object} requestInit request object to request
-     * @param {array|string} retrySchms retrySchemas for each response. If string -> defaultRetrySchema
-     * @returns abortablePendingRequest
-     */
-    return (route, requestInit, retrySchms) => {
-      const query = requestInit && requestInit.query
-      const body = requestInit && requestInit.body
-      const isAbortable = requestInit && requestInit.isAbortable
-      const headers = requestInit && {
+    return (route, requestInit) => {
+      const query = requestInit?.query
+      const body = requestInit?.body
+      const isAbortable = requestInit?.isAbortable
+      const headers = {
         ...this._requestOptions.headers,
-        ...requestInit.headers,
+        ...requestInit?.headers,
       }
+      const shouldHold = requestInit?.shouldHold
+      const waitNetworkTime = requestInit?.waitNetworkTime
+      const retrySchms = requestInit?.retrySchemas
 
       const abortCtrl = isAbortable ? new AbortController() : null
+      const url = this._getAPIUrl(route, query).toString()
+
       const request = Object.assign(
         {
-          url: this._getAPIUrl(route, query).toString(),
+          url: url,
           headers: headers,
           method: method.toUpperCase(),
         },
@@ -94,15 +104,23 @@ class ZlcaClient {
         method !== 'get' && { data: body }
       )
 
+      //TODO: check if it's in blacklist.
+      this._interceptor.interceptRequest(request)
+
       let retrySchemas = null
-      if (!retrySchms) {
+      if (retrySchms) {
         retrySchemas =
-          typeof retrySchms === 'string' && retrySchms === 'default'
+          retrySchms === 'default'
             ? { ...this._defaultRetrySchema }
             : [...retrySchms]
       }
 
-      const pendingRequest = this.engine.request(request, retrySchemas)
+      //TODO: Thêm một cái wrapper (đánh chặn cho thằng interceptor ở đây!)
+      const response = this._engine.request(request, retrySchemas, {
+        shouldHold,
+        waitNetworkTime,
+      })
+      const pendingRequest = this._interceptor.interceptResponse(response)
 
       return new AbortablePendingRequest(pendingRequest, abortCtrl)
     }
@@ -132,10 +150,12 @@ class ZlcaClient {
   _isAbsoluteURL(url) {
     const http = /^https?:\/\//i
     const https = /^https?:\/\/|^\/\//i
-
     return http.test(url) || https.test(url)
   }
 }
 
 const zlcaClient = new ZlcaClient()
+zlcaClient.useAxiosEngine(axiosEngine)
+zlcaClient.useInterceptor(interceptor)
+
 export default zlcaClient

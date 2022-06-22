@@ -16,3 +16,15 @@ export const socketEvents = Object.freeze({
   CREATE_CONVER: 'event://create-conver',
   GET_CONVER: 'event://get-conver',
 })
+
+export const errorCodes = Object.freeze({
+  OK: 200,
+  CREATED: 201,
+  BAD_REQUEST: 400,
+  UN_AUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  INTERNAL_SERVER: 500,
+  BLOCKED_URL: 888,
+  DISNETWORK_ERROR: 999,
+})

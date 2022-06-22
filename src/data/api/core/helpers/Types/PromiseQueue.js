@@ -1,4 +1,4 @@
-export default class PromiseQueue {
+class PromiseQueue {
   constructor() {
     this.queue = []
     this.isProcessing = false
@@ -22,3 +22,5 @@ export default class PromiseQueue {
     }
   }
 }
+
+export default PromiseQueue

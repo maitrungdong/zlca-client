@@ -107,7 +107,7 @@
 
               //TODO: notify that network status is online
               this._onlineListeners.forEach((listener) => listener())
-              this._onChangeListeners.forEach((listener) => listener(true))
+              this._onChangeListeners.forEach((listener) => listener('online'))
 
               //TODO: reset ping more slowly.
               this._options.interval = 10000
@@ -120,7 +120,7 @@
 
               //TODO: notify that network status is offline
               this._offlineListeners.forEach((listener) => listener())
-              this._onChangeListeners.forEach((listener) => listener(false))
+              this._onChangeListeners.forEach((listener) => listener('offline'))
 
               //TODO: reset ping more quickly.
               this._options.interval = 3000
@@ -139,6 +139,8 @@
     }
   }
 
-  const detectNetwork = new DetectNetwork()
-  window.ZlcaDetectNetwork = detectNetwork
+  if (!window.ZlcaDetectNetwork) {
+    const detectNetwork = new DetectNetwork()
+    window.ZlcaDetectNetwork = detectNetwork
+  }
 })()

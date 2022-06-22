@@ -1,44 +1,25 @@
 import ZlcaClient from '../core/ZlcaClient.js'
 
 const messagesAPIDataSource = {
-  controller: null,
   getMessagesOfConver: async (converId) => {
-    try {
-      if (messagesAPIDataSource.controller !== null) {
-        messagesAPIDataSource.controller.abort()
-      }
-
-      messagesAPIDataSource.controller = new AbortController()
-      const reqInit = {
-        signal: messagesAPIDataSource.controller.signal,
-        query: {
-          converId,
-        },
-      }
-      const retryOptions = {
+    const retrySchemas = [
+      {
         maxRetries: 10,
-      }
+        msBackoff: 100,
+        errorCodes: [404],
+      },
+    ]
 
-      // setTimeout(() => {
-      //   if (!controller.signal.aborted) {
-      //     controller.abort()
-      //     controller = null
-      //   }
-      //   console.log('Canceled!')
-      // }, 10000)
-
-      ZlcaClient.get('/api/messages', reqInit, retryOptions)
-
-      const res = await ZlcaClient.get(`/api/messages`, reqInit, retryOptions)
-
-      if (res.success) {
-        return res.data
-      } else {
-        throw new Error(res.message)
-      }
-    } catch (err) {
-      throw err
+    const request = {
+      query: {
+        converId,
+      },
+      isAbortable: true,
+      retrySchemas,
     }
+
+    const res = await ZlcaClient.get(`/api/messages`, request)
+    return res.data
   },
 
   saveNewMessage: async (newMessage) => {

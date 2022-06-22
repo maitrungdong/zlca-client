@@ -2,57 +2,30 @@ import ZlcaClient from '../core/ZlcaClient.js'
 
 const authAPIDataSource = {
   login: async (userInfo) => {
-    try {
-      const res = await ZlcaClient.post('/api/auth/sign-in', {
-        body: {
-          ...userInfo,
-        },
-      })
-
-      if (res.success) {
-        return res.data
-      } else {
-        throw new Error(res.messsage)
-      }
-    } catch (err) {
-      throw err
-    }
+    const res = await ZlcaClient.post('/api/auth/sign-in', {
+      body: {
+        ...userInfo,
+      },
+    })
+    return res.data
   },
 
   register: async (userInfo) => {
-    try {
-      const res = await ZlcaClient.post('/api/auth/register', {
-        body: {
-          ...userInfo,
-        },
-      })
-
-      if (res.success) {
-        return res.data
-      } else {
-        throw new Error(res.messsage)
-      }
-    } catch (err) {
-      throw err
-    }
+    const res = await ZlcaClient.post('/api/auth/register', {
+      body: {
+        ...userInfo,
+      },
+    })
+    return res.data
   },
 
   logout: async (userId) => {
-    try {
-      const res = await ZlcaClient.post('/api/auth/sign-out', {
-        body: {
-          userId,
-        },
-      })
-
-      if (res.success) {
-        return res.data
-      } else {
-        throw new Error(res.messsage)
-      }
-    } catch (err) {
-      throw err
-    }
+    const res = await ZlcaClient.post('/api/auth/sign-out', {
+      body: {
+        userId,
+      },
+    })
+    return res.data
   },
 }
 
