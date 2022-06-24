@@ -162,9 +162,9 @@ WaitRequestsManager được sử dụng để quản lý danh sách các reques
 DetectNetwork được viết ra nhằm mục đích khắc phục các hạn chế của các native api ('online', 'offline' , 'change') khi nhận biết việc có kết nối Internet hay không. Nó hoạt động dựa trên cơ chế: Ping tới các server "ổn định" trong một khoảng thời gian để detect kết nối Internet. Nó sẽ được gắn `global` trên window. Các dev có thể sử dụng bằng cách lắng nghe các sự kiện:
 
 ```js script
-window.ZlcaClient.addEvenListener('online', onlineListener)
-window.ZlcaClient.addEventListener('offline', offlineListener)
-window.ZlcaClient.addEventListener('change', (status)=> {
+window.DetectNetwork.addEvenListener('online', onlineListener)
+window.DetectNetwork.addEventListener('offline', offlineListener)
+window.DetectNetwork.addEventListener('change', (status)=> {
   if(status === 'online'){
     console.log('Network is online')
   }
