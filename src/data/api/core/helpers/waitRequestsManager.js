@@ -8,7 +8,8 @@ class WaitRequestsManager {
    *  request,
    *  retrySchemas,
    * },
-   * expiredAt: Date | 'infinite',
+   * isInfinite: true,
+   * expiredAt: Date,
    * deferer: Deferer,
    * }
    */
@@ -16,6 +17,7 @@ class WaitRequestsManager {
 
   _isOnline = true
   CLEAR_WAIT_REQUESTS_TIME = 60 * 60 * 1000 // an hour
+  INFINITE_TIME = 365 * 24 * 60 * 60 * 1000 // a year
 
   constructor() {
     //TODO: add network change listener.
@@ -33,14 +35,19 @@ class WaitRequestsManager {
   }
 
   //function helper
-  getRemainTime(expiredAt) {
+  getRemainTime(waitRequest) {
     let remainTime = null
-    if (expiredAt === 'infinite') {
+    if (waitRequest.isInfinite) {
       remainTime = 'infinite'
     } else {
-      remainTime = Date.now() - expiredAt.getTime()
+      remainTime = Date.now() - waitRequest.expiredAt.getTime()
     }
     return remainTime
+  }
+
+  //function helper
+  getTimeToDelay(waitRequest) {
+    return Date.now() - waitRequest.expiredAt.getTime()
   }
 
   createWaitRequest(request, retrySchemas, waitNetworkTime) {
@@ -52,8 +59,8 @@ class WaitRequestsManager {
 
         expiredAt:
           waitNetworkTime === 'infinite'
-            ? waitNetworkTime
-            : new Date(Date.now() + waitNetworkTime), //Date | 'infinite'
+            ? new Date(Date.now() + this.INFINITE_TIME)
+            : new Date(Date.now() + waitNetworkTime), //Date
         deferer: new Deferer(),
       },
     }

@@ -1,7 +1,5 @@
 import axiosCore from './AxiosCore.js'
-import decryptor from './helpers/decryptor.js'
 import delay from './helpers/delay.js'
-import logger from './helpers/logger.js'
 import waitRequestsManager from './helpers/waitRequestsManager.js'
 
 import { isEmptyObj } from 'utils/checks.js'
@@ -63,7 +61,9 @@ class AxiosEngine {
         waitNetworkConfig.waitNetworkTime
       )
 
-      await waitRequest.deferer.delay(waitNetworkConfig.waitNetworkTime)
+      await waitRequest.deferer.delay(
+        this._waitRequestsManager.getTimeToDelay(waitRequest)
+      )
 
       //Sau khi đợi xong, hoặc không đợi nữa thì mình sẽ xóa cái waitRequest này bên trong waitRequests.
       this._waitRequestsManager.removeWaitRequestById(waitRequest.id)
@@ -73,9 +73,7 @@ class AxiosEngine {
       /**
        * [ISSUE]: Hơi đệ quy 1 tí, giờ nghĩ cách xóa cái đệ quy đi.
        */
-      const remainTime = this._waitRequestsManager.getRemainTime(
-        waitRequest.expiredAt
-      )
+      const remainTime = this._waitRequestsManager.getRemainTime(waitRequest)
 
       return await this.request(request, retrySchemas, {
         waitNetworkTime: remainTime,
@@ -180,8 +178,6 @@ class AxiosEngine {
 }
 
 const axiosEngine = new AxiosEngine()
-axiosEngine.useDecryptor(decryptor)
-axiosEngine.useLogger(logger)
 axiosEngine.useWaitRequestsManager(waitRequestsManager)
 
 export default axiosEngine
