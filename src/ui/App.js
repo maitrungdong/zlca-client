@@ -1,56 +1,14 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
-import ZaluChat from './pages/ZaluChat'
-// import ZaluChat from 'demo/ZaluChat'
-import Login from './pages/login/Login'
-import Register from './pages/Register'
-import RequiredAuth from './hoc/RequiredAuth'
-import NotFound from './pages/NotFound'
-import { ToastContainer } from 'react-toastify'
-
-import { useNotifNetworkStatus } from './hooks'
+import ZaluChat from 'demo/ZaluChat'
 
 function App() {
-  useNotifNetworkStatus()
-
   return (
     <div className="app">
       <Routes>
-        <Route
-          exact
-          path="/zalu-chat"
-          element={
-            <RequiredAuth>
-              <ZaluChat />
-            </RequiredAuth>
-          }
-        />
-        <Route
-          exact
-          path="/"
-          element={
-            <RequiredAuth>
-              <ZaluChat />
-            </RequiredAuth>
-          }
-        />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<NotFound />} />
+        <Route exact path="/" element={<ZaluChat />} />
       </Routes>
-
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </div>
   )
 }

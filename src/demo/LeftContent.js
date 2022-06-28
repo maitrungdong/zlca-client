@@ -36,16 +36,6 @@ const LeftContent = ({ backToMenu }) => {
           Back
         </button>
       </div>
-      <div className="tabs is-large">
-        <ul>
-          <li className={'is-active'}>
-            <a href="#conversations">Trò chuyện</a>
-          </li>
-          <li>
-            <a href="#notifications">Thông báo</a>
-          </li>
-        </ul>
-      </div>
       <div className="main-content">
         <ConversationList convNum={convNum} />
       </div>
